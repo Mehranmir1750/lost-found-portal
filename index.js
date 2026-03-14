@@ -16,7 +16,12 @@ const app = express();
 
 const saltRounds = 10;
 
-app.use(helmet());
+// app.use(helmet());
+
+
+app.use(helmet({
+    contentSecurityPolicy: false
+}));
 
 // middleware
 app.set("view engine", "ejs");

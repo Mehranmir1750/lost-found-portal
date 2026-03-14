@@ -495,3 +495,19 @@ body {
 
     .form-row { grid-template-columns: 1fr; gap: 0; }
 }
+
+.form-group {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    pointer-events: all;  /* ← this is the key fix */
+    z-index: 10;
+    font-size: 18px;
+}

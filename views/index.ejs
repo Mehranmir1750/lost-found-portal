@@ -7,309 +7,170 @@
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
-    <!-- Floating Particles -->
-    <div class="particles" id="particles"></div>
 
-    <!-- Navbar -->
-    <!-- <nav class="navbar">
-        <div class="logo">Kashmir Found & Lost Portal</div>
-        <div class="mobile-menu" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="nav-links" id="navLinks">
+    <div class="particles"></div>
+
+    <!-- ═══════════════════════════
+         NAVBAR
+    ════════════════════════════ -->
+    <nav class="navbar">
+
+        <!-- Logo -->
+        <div class="logo">IUST Found & Lost Portal</div>
+
+        <!-- Desktop nav links (center) -->
+        <div class="nav-links">
             <a href="/">Home</a>
             <a href="#how">How It Works</a>
-            <a href="#categories">Categories</a>
-            <a href="#contact">Contact</a>
-            <div class="auth-buttons">
-                <a href="/register" class="btn btn-register">Register</a>
-                <a href="/login" class="btn btn-login">Login</a>
-            </div>
         </div>
-    </nav> -->
 
-    <!-- <nav class="navbar">
-    <div class="logo">IUST Found & Lost Portal</div>
-    <div class="mobile-menu" onclick="toggleMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-    <div class="nav-links" id="navLinks">
-        <a href="/">Home</a>
-        <a href="#how">How It Works</a>
-        <a href="#categories">Categories</a> -->
-        <!-- <a href="#contact">Contact</a>
-        <div class="auth-buttons">
+        <!-- Desktop auth buttons (right) -->
+        <div class="nav-auth">
             <a href="/register" class="btn btn-register">Register</a>
-            <a href="/login" class="btn btn-login">Login</a>
+            <a href="/login"    class="btn btn-login">Login</a>
             <a href="/admin/login" class="btn btn-admin">Admin</a>
         </div>
-    </div>
-</nav> -->
 
-<nav class="navbar">
-    <div class="logo">IUST Found & Lost Portal</div>
+        <!-- Hamburger — only shows on mobile -->
+        <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
 
-    <!-- Auth buttons always visible, even on mobile -->
-    <div class="auth-buttons">
-        <a href="/register" class="btn btn-register">Register</a>
-        <a href="/login" class="btn btn-login">Login</a>
-        <a href="/admin/login" class="btn btn-admin">Admin</a>
-    </div>
+        <!-- Mobile dropdown menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="/">Home</a>
+            <a href="#how">How It Works</a>
+            <hr>
+            <a href="/register" class="btn btn-register">Register</a>
+            <a href="/login"    class="btn btn-login">Login</a>
+            <a href="/admin/login" class="btn btn-admin">Admin</a>
+        </div>
 
-    <!-- Hamburger — shows on mobile for nav links only -->
-    <div class="mobile-menu" onclick="toggleMenu()" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+    </nav>
 
-    <!-- Nav links — hidden on mobile until hamburger clicked -->
-    <div class="nav-links" id="navLinks">
-        <a href="/">Home</a>
-        <a href="#how">How It Works</a>
-    </div>
-</nav>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
+    <!-- ═══════════════════════════
+         HERO
+    ════════════════════════════ -->
+    <section class="hero">
         <div class="hero-content">
-            <h1 class="hero-title">Lost Something? Found Something?</h1>
-            <p class="hero-subtitle">IUST's Trusted Lost & Found Platform</p>
-            <p class="hero-description">
-                Connect with your community to reunite lost items with their rightful owners. Whether you've lost your phone, 
-                wallet, jewelry, or found something that belongs to someone else - we're here to help bridge the gap.
+            <h1>Lost Something?<br>Found Something?</h1>
+            <p class="hero-sub">IUST's Trusted Lost & Found Platform</p>
+            <p class="hero-desc">
+                Connect with your community to reunite lost items with their rightful owners.
+                Whether you've lost your phone, wallet, or found something — we're here to help.
             </p>
-            <div class="hero-buttons">
-                <a href="/search" class="btn btn-lost btn-large">📢 I Lost Something</a>
-                <a href="/search" class="btn btn-found btn-large">✨ I Found Something</a>
-                <a href="/search" class="btn btn-register btn-large">🔍 Search Items</a>
+            <div class="hero-btns">
+                <a href="/login" class="btn btn-lost">📢 I Lost Something</a>
+                <a href="/login" class="btn btn-found">✨ I Found Something</a>
+                <a href="/login" class="btn btn-dark">🔍 Search Items</a>
             </div>
         </div>
     </section>
 
+    <!-- ═══════════════════════════
+         RECENT ITEMS
+    ════════════════════════════ -->
+    <section class="items-section">
 
-
-
-
-
-
-
-    <!-- Recent Items Section -->
-    <section class="recent-items" id="recent">
-        <div class="recent-items-header">
-            <h2 class="section-title">Recent Lost & Found Items</h2>
-            <a href="/search" class="view-all-link">View All Items →</a>
+        <div class="items-header">
+            <h2>Recent Lost & Found Items</h2>
+            <a href="/login">View All →</a>
         </div>
-        
+
         <% if (items && items.length === 0) { %>
-        <div class="no-items">
-            <div class="no-items-icon">📭</div>
-            <p class="no-items-text">No items posted yet.</p>
-            <p class="no-items-subtext">Be the first to post an item and help someone!</p>
-            <div class="no-items-buttons">
-                <a href="/post/lost" class="btn btn-lost">Post Lost Item</a>
-                <a href="/post/found" class="btn btn-found">Post Found Item</a>
+
+            <div class="empty-state">
+                <span>📭</span>
+                <p>No items posted yet. Be the first!</p>
+                <a href="/login" class="btn btn-login">Post an Item</a>
             </div>
-        </div>
+
         <% } else { %>
-        <div class="items-filter-tabs">
-            <button class="filter-tab active" onclick="filterItems('all')">All Items</button>
-            <button class="filter-tab" onclick="filterItems('lost')">Lost</button>
-            <button class="filter-tab" onclick="filterItems('found')">Found</button>
-        </div>
-        
-        <div class="items-list">
-            <% items.forEach(item => { %>
-            <div class="item-card" data-type="<%= item.type.toLowerCase() %>">
-                <div class="item-card-header">
-                    <span class="item-badge <%= item.type.toLowerCase() %>">
-                        <%= item.type === 'lost' ? '📢' : '✨' %> <%= item.type %>
-                    </span>
-                    <span class="item-date">
-                        <%= new Date(item.created_at || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
-                    </span>
-                </div>
-                
-                <div class="item-card-body">
-                    <!-- <img src="<% item.photo %>"> -->
-                     <img src="<%= item.image %>" alt="Item Image">
-                    <h3 class="item-title"><%= item.item_name %></h3>
-                    
-                    <div class="item-details">
-                        <div class="item-detail-row">
-                            <span class="detail-icon">📍</span>
-                            <span class="detail-text"><%= item.location %></span>
-                        </div>
-                        
-                        <% if (item.category) { %>
-                        <div class="item-detail-row">
-                            <span class="detail-icon">🏷️</span>
-                            <span class="detail-text"><%= item.category %></span>
-                        </div>
-                        <% } %>
-                        
+
+            <!-- Filter tabs -->
+            <div class="filter-tabs">
+                <button class="tab active" data-filter="all"   onclick="filterItems(this)">All Items</button>
+                <button class="tab"        data-filter="lost"  onclick="filterItems(this)">Lost</button>
+                <button class="tab"        data-filter="found" onclick="filterItems(this)">Found</button>
+            </div>
+
+            <!-- Items grid -->
+            <div class="items-grid">
+                <% items.forEach(item => { %>
+                <div class="item-card" data-type="<%= item.type.toLowerCase() %>">
+
+                    <!-- Image -->
+                    <div class="card-img">
+                        <img src="<%= item.image %>" alt="<%= item.item_name %>">
+                        <span class="type-badge <%= item.type.toLowerCase() %>">
+                            <%= item.type === 'lost' ? '📢' : '✨' %> <%= item.type %>
+                        </span>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="card-body">
+                        <div class="card-name"><%= item.item_name %></div>
+                        <div class="card-loc">📍 <%= item.location %></div>
                         <% if (item.description) { %>
-                        <div class="item-description">
-                            <p><%= item.description.substring(0, 100) %><%= item.description.length > 100 ? '...' : '' %></p>
+                        <div class="card-desc">
+                            <%= item.description.substring(0, 90) %><%= item.description.length > 90 ? '...' : '' %>
                         </div>
                         <% } %>
                     </div>
-                </div>
-                
-                <div class="item-card-footer">
-                    <div class="item-user">
-                        <div class="user-avatar">
-                            <%= item.first_name ? item.first_name.charAt(0).toUpperCase() : '?' %>
+
+                    <!-- Footer -->
+                    <div class="card-footer">
+                        <div class="card-user">
+                            <div class="avatar">
+                                <%= item.first_name ? item.first_name.charAt(0).toUpperCase() : '?' %>
+                            </div>
+                            <span><%= item.first_name %> <%= item.last_name %></span>
                         </div>
-                        <span class="user-name"><%= item.first_name %> <%= item.last_name %></span>
+                        <a href="/items/<%= item.item_id %>" class="btn-view">View</a>
                     </div>
-                    <!-- <a href="/items/<%= item.id %>" class="btn-view-details">View Details</a> -->
-                     <a href="/login/<%= item.id %>" class="btn-view-details"> View Details</a>
 
                 </div>
+                <% }) %>
             </div>
-            <% }) %>
-        </div>
+
         <% } %>
     </section>
 
-
-
-
-
-
-
-
-
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <h2 class="section-title">Why Choose Us?</h2>
-        <p class="section-subtitle">We provide a reliable and transparent platform that connects people
-             with their lost belongings quickly and securely. Our system is designed to be easy to use, 
-             ensuring that anyone can report or find lost items without confusion. With accurate listings 
-             and a user-friendly interface, we help reunite people with what matters most.</p>
-    </section>
-
-    
-
-    <!-- How It Works Section -->
-    <section class="how-it-works" id="how">
-        <h2 class="section-title">How It Works</h2>
-        <p class="section-subtitle">Simple steps to reunite with your belongings</p>
-        <div class="steps-container">
-            <% 
-            const steps = [
-                { number: 1, title: 'Post Your Item', description: 'Create a detailed post with photos, description, location, and date. Choose whether you lost or found something.' },
-                { number: 2, title: 'Search & Match', description: 'Browse through listings or use our smart search to find items matching your description. Get instant alerts for new matches.' },
-                { number: 3, title: 'Connect & Recover', description: 'Connect securely through our platform, verify ownership, and arrange a safe meetup to return the item.' }
-            ];
-            %>
-            <% steps.forEach(function(step) { %>
+    <!-- ═══════════════════════════
+         HOW IT WORKS
+    ════════════════════════════ -->
+    <section class="how-section" id="how">
+        <h2>How It Works</h2>
+        <p class="how-sub">Simple steps to reunite with your belongings</p>
+        <div class="steps-grid">
             <div class="step-card">
-                <div class="step-number"><%= step.number %></div>
-                <h3 class="step-title"><%= step.title %></h3>
-                <p class="step-description"><%= step.description %></p>
+                <div class="step-num">1</div>
+                <h3>Post Your Item</h3>
+                <p>Create a post with photos, description and location.</p>
             </div>
-            <% }); %>
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <h3>Search & Match</h3>
+                <p>Browse listings or search to find matching items.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">3</div>
+                <h3>Connect & Recover</h3>
+                <p>Contact the owner and arrange a safe meetup.</p>
+            </div>
         </div>
     </section>
 
-    <!-- Categories Section -->
-    <!-- <section class="categories" id="categories">
-        <h2 class="section-title">Popular Categories</h2>
-        <p class="section-subtitle">What are you looking for?</p>
-        <div class="categories-grid">
-            <% 
-            const categories = [
-                { icon: '📱', name: 'Mobile Phones' },
-                { icon: '👜', name: 'Bags & Wallets' },
-                { icon: '💍', name: 'Jewelry & Gold' },
-                { icon: '🔑', name: 'Keys' },
-                { icon: '💳', name: 'Cards & Documents' },
-                { icon: '⌚', name: 'Watches' },
-                { icon: '🎒', name: 'Bags & Luggage' },
-                { icon: '📷', name: 'Electronics' },
-                { icon: '👓', name: 'Accessories' },
-                { icon: '🐕', name: 'Pets' },
-                { icon: '📚', name: 'Books & Files' },
-                { icon: '✨', name: 'Other Items' }
-            ];
-            %>
-            <% categories.forEach(function(category) { %>
-            <div class="category-card">
-                <div class="category-icon"><%= category.icon %></div>
-                <div class="category-name"><%= category.name %></div>
-            </div>
-            <% }); %>
-        </div>
-    </section> -->
-
-    <!-- Footer -->
-    <footer class="footer" id="contact">
-        <div class="footer-content">
-            <!-- <div class="footer-links">
-                <a href="/about">About Us</a>
-                <a href="/privacy">Privacy Policy</a>
-                <a href="/terms">Terms of Service</a>
-                <a href="/faq">FAQ</a>
-                <a href="/contact">Contact Us</a>
-            </div>
-            <div class="footer-social">
-                <div class="social-icon">📘</div>
-                <div class="social-icon">🐦</div>
-                <div class="social-icon">📷</div>
-                <div class="social-icon">💬</div>
-            </div> -->
-            <p class="copyright">© <%= new Date().getFullYear() %> IUST Found and Lost. All rights reserved. Helping reunite IUST, one item at a time. 💙</p>
-        </div>
+    <!-- ═══════════════════════════
+         FOOTER
+    ════════════════════════════ -->
+    <footer class="footer">
+        <p>© <%= new Date().getFullYear() %> IUST Found and Lost. Helping reunite IUST, one item at a time. 💙</p>
     </footer>
 
-    <script src="/js/script.js"></script>
-    <script>
-        // Filter items by type
-        function filterItems(type) {
-            const cards = document.querySelectorAll('.item-card');
-            const tabs = document.querySelectorAll('.filter-tab');
-            
-            // Update active tab
-            tabs.forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Filter cards
-            cards.forEach(card => {
-                if (type === 'all') {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = card.dataset.type === type ? 'block' : 'none';
-                }
-            });
-        }
+     <script src="/js/index.js"></script>
 
-
-
-        
-    function toggleMenu() {
-        const nav = document.getElementById('navLinks');
-        const burger = document.getElementById('hamburger');
-        nav.classList.toggle('open');
-        burger.classList.toggle('active');
-    }
-
-    function filterItems(type) {
-        const cards = document.querySelectorAll('.item-card');
-        const tabs  = document.querySelectorAll('.filter-tab');
-        tabs.forEach(tab => tab.classList.remove('active'));
-        event.target.classList.add('active');
-        cards.forEach(card => {
-            card.style.display = (type === 'all' || card.dataset.type === type) ? 'block' : 'none';
-        });
-    }
-
-    </script>
 </body>
 </html>

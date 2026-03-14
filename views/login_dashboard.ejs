@@ -83,11 +83,17 @@
      data-status="<%= item.status || 'Open' %>">
     <div class="item-image">
         <div class="item-content">
-      <!-- <img src <%= item.image %>> -->
 
-      <!-- <img src="<%= item.image %>" alt="Item Image" style="height: 200px; width: 400px; margin-right: 40px; margin-left: -20px; margin-top: -20px;"> -->
+     
+      <!-- <img src="<%= item.image %>" alt="Item Image"> -->
 
-      <img src="<%= item.image %>" alt="Item Image">
+<div class="card-img">
+    <% if (item.image) { %>
+        <img src="<%= item.image %>" alt="<%= item.item_name %>">
+    <% } else { %>
+        <div class="no-image">📦</div>
+    <% } %>
+</div>
 
       <!-- <span class="item-status <%= item.type.toLowerCase() %>">
         <%= item.type %>
@@ -112,7 +118,9 @@
       <div class="item-title"><%= item.item_name %></div>
       <div class="item-details"><%= item.description %></div>
       <div class="item-location">📍 <%= item.location %></div>
+      <% if(item.landmark){ %>
       <div class="item-landmark"> <%= item.landmark %> </div>
+      <% } %>
 
       <div class="item-footer">
         <div class="item-date">

@@ -1,47 +1,48 @@
-   // ── Hamburger toggle ──
-        function toggleMenu() {
-            var menu   = document.getElementById('mobileMenu');
-            var burger = document.getElementById('hamburger');
-            var isOpen = menu.classList.contains('open');
+document.addEventListener('DOMContentLoaded', function () {
 
+    var burger   = document.getElementById('hamburger');
+    var dropdown = document.getElementById('mobileDropdown');
+
+    // ── Hamburger toggle ──
+    if (burger && dropdown) {
+        burger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var isOpen = dropdown.classList.contains('open');
             if (isOpen) {
-                menu.classList.remove('open');
+                dropdown.classList.remove('open');
                 burger.classList.remove('active');
             } else {
-                menu.classList.add('open');
+                dropdown.classList.add('open');
                 burger.classList.add('active');
-            }
-        }
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            var menu   = document.getElementById('mobileMenu');
-            var burger = document.getElementById('hamburger');
-            if (!menu.contains(e.target) && !burger.contains(e.target)) {
-                menu.classList.remove('open');
-                burger.classList.remove('active');
             }
         });
 
-        // ── Filter items (Lost / Found / All) ──
-        function filterItems(clickedBtn) {
-            var filter = clickedBtn.getAttribute('data-filter');
-
-            // update active tab
-            var tabs = document.querySelectorAll('.tab');
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
+        // Close when clicking anywhere outside
+        document.addEventListener('click', function (e) {
+            if (!dropdown.contains(e.target) && !burger.contains(e.target)) {
+                dropdown.classList.remove('open');
+                burger.classList.remove('active');
             }
-            clickedBtn.classList.add('active');
+        });
+    }
+
+    // ── Filter tabs ──
+    var tabs = document.querySelectorAll('.tab');
+    tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var filter = this.getAttribute('data-filter');
+
+            // update active state
+            tabs.forEach(function (t) { t.classList.remove('active'); });
+            btn.classList.add('active');
 
             // show / hide cards
             var cards = document.querySelectorAll('.item-card');
-            for (var j = 0; j < cards.length; j++) {
-                var cardType = cards[j].getAttribute('data-type');
-                if (filter === 'all' || cardType === filter) {
-                    cards[j].style.display = 'flex';
-                } else {
-                    cards[j].style.display = 'none';
-                }
-            }
-        }
+            cards.forEach(function (card) {
+                var type = card.getAttribute('data-type');
+                card.style.display = (filter === 'all' || type === filter) ? 'flex' : 'none';
+            });
+        });
+    });
+
+});

@@ -4,55 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title || 'IUST Found and Lost' %></title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
 
     <div class="particles"></div>
 
-    <!-- ═══════════════════════════
+    <!-- ═══════════════════
          NAVBAR
-    ════════════════════════════ -->
+    ════════════════════ -->
     <nav class="navbar">
 
-        <!-- Logo -->
         <div class="logo">IUST Found & Lost Portal</div>
 
-        <!-- Desktop nav links (center) -->
+        <!--
+            DESKTOP: nav-links + nav-auth visible, hamburger hidden
+            MOBILE:  nav-links + nav-auth hidden, hamburger visible
+                     clicking hamburger shows mobile-dropdown
+        -->
+
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="#how">How It Works</a>
         </div>
 
-        <!-- Desktop auth buttons (right) -->
         <div class="nav-auth">
-            <a href="/register" class="btn btn-register">Register</a>
-            <a href="/login"    class="btn btn-login">Login</a>
+            <a href="/register"    class="btn btn-register">Register</a>
+            <a href="/login"       class="btn btn-login">Login</a>
             <a href="/admin/login" class="btn btn-admin">Admin</a>
         </div>
 
-        <!-- Hamburger — only shows on mobile -->
-        <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <!-- Hamburger: mobile only -->
+        <button class="hamburger" id="hamburger">
             <span></span>
             <span></span>
             <span></span>
         </button>
 
-        <!-- Mobile dropdown menu -->
-        <div class="mobile-menu" id="mobileMenu">
-            <a href="/">Home</a>
-            <a href="#how">How It Works</a>
-            <hr>
-            <a href="/register" class="btn btn-register">Register</a>
-            <a href="/login"    class="btn btn-login">Login</a>
-            <a href="/admin/login" class="btn btn-admin">Admin</a>
-        </div>
-
     </nav>
 
-    <!-- ═══════════════════════════
+    <!-- Mobile dropdown — sits below navbar, full width -->
+    <div class="mobile-dropdown" id="mobileDropdown">
+        <a href="/">Home</a>
+        <a href="#how">How It Works</a>
+        <div class="dropdown-divider"></div>
+        <a href="/register"    class="dropdown-btn btn-register">Register</a>
+        <a href="/login"       class="dropdown-btn btn-login">Login</a>
+        <a href="/admin/login" class="dropdown-btn btn-admin">Admin</a>
+    </div>
+
+    <!-- ═══════════════════
          HERO
-    ════════════════════════════ -->
+    ════════════════════ -->
     <section class="hero">
         <div class="hero-content">
             <h1>Lost Something?<br>Found Something?</h1>
@@ -69,9 +73,9 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════════
+    <!-- ═══════════════════
          RECENT ITEMS
-    ════════════════════════════ -->
+    ════════════════════ -->
     <section class="items-section">
 
         <div class="items-header">
@@ -81,66 +85,61 @@
 
         <% if (items && items.length === 0) { %>
 
-            <div class="empty-state">
-                <span>📭</span>
-                <p>No items posted yet. Be the first!</p>
-                <a href="/login" class="btn btn-login">Post an Item</a>
-            </div>
+        <div class="empty-state">
+            <span>📭</span>
+            <p>No items posted yet. Be the first!</p>
+            <a href="/login" class="btn btn-login">Post an Item</a>
+        </div>
 
         <% } else { %>
 
-            <!-- Filter tabs -->
-            <div class="filter-tabs">
-                <button class="tab active" data-filter="all"   onclick="filterItems(this)">All Items</button>
-                <button class="tab"        data-filter="lost"  onclick="filterItems(this)">Lost</button>
-                <button class="tab"        data-filter="found" onclick="filterItems(this)">Found</button>
-            </div>
+        <div class="filter-tabs">
+            <button class="tab active" data-filter="all">All Items</button>
+            <button class="tab" data-filter="lost">Lost</button>
+            <button class="tab" data-filter="found">Found</button>
+        </div>
 
-            <!-- Items grid -->
-            <div class="items-grid">
-                <% items.forEach(item => { %>
-                <div class="item-card" data-type="<%= item.type.toLowerCase() %>">
+        <div class="items-grid">
+            <% items.forEach(item => { %>
+            <div class="item-card" data-type="<%= item.type.toLowerCase() %>">
 
-                    <!-- Image -->
-                    <div class="card-img">
-                        <img src="<%= item.image %>" alt="<%= item.item_name %>">
-                        <span class="type-badge <%= item.type.toLowerCase() %>">
-                            <%= item.type === 'lost' ? '📢' : '✨' %> <%= item.type %>
-                        </span>
-                    </div>
-
-                    <!-- Body -->
-                    <div class="card-body">
-                        <div class="card-name"><%= item.item_name %></div>
-                        <div class="card-loc">📍 <%= item.location %></div>
-                        <% if (item.description) { %>
-                        <div class="card-desc">
-                            <%= item.description.substring(0, 90) %><%= item.description.length > 90 ? '...' : '' %>
-                        </div>
-                        <% } %>
-                    </div>
-
-                    <!-- Footer -->
-                    <div class="card-footer">
-                        <div class="card-user">
-                            <div class="avatar">
-                                <%= item.first_name ? item.first_name.charAt(0).toUpperCase() : '?' %>
-                            </div>
-                            <span><%= item.first_name %> <%= item.last_name %></span>
-                        </div>
-                        <a href="/items/<%= item.item_id %>" class="btn-view">View</a>
-                    </div>
-
+                <div class="card-img">
+                    <img src="<%= item.image %>" alt="<%= item.item_name %>">
+                    <span class="type-badge <%= item.type.toLowerCase() %>">
+                        <%= item.type === 'lost' ? '📢' : '✨' %> <%= item.type %>
+                    </span>
                 </div>
-                <% }) %>
+
+                <div class="card-body">
+                    <div class="card-name"><%= item.item_name %></div>
+                    <div class="card-loc">📍 <%= item.location %></div>
+                    <% if (item.description) { %>
+                    <div class="card-desc">
+                        <%= item.description.substring(0, 90) %><%= item.description.length > 90 ? '...' : '' %>
+                    </div>
+                    <% } %>
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-user">
+                        <div class="avatar">
+                            <%= item.first_name ? item.first_name.charAt(0).toUpperCase() : '?' %>
+                        </div>
+                        <span><%= item.first_name %> <%= item.last_name %></span>
+                    </div>
+                    <a href="/items/<%= item.item_id %>" class="btn-view">View</a>
+                </div>
+
             </div>
+            <% }) %>
+        </div>
 
         <% } %>
     </section>
 
-    <!-- ═══════════════════════════
+    <!-- ═══════════════════
          HOW IT WORKS
-    ════════════════════════════ -->
+    ════════════════════ -->
     <section class="how-section" id="how">
         <h2>How It Works</h2>
         <p class="how-sub">Simple steps to reunite with your belongings</p>
@@ -163,14 +162,14 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════════
+    <!-- ═══════════════════
          FOOTER
-    ════════════════════════════ -->
+    ════════════════════ -->
     <footer class="footer">
         <p>© <%= new Date().getFullYear() %> IUST Found and Lost. Helping reunite IUST, one item at a time. 💙</p>
     </footer>
 
-     <script src="/js/index.js"></script>
+    <script src="/js/index.js"></script>
 
 </body>
 </html>

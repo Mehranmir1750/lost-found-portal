@@ -13,7 +13,7 @@ body {
 }
 
 /* ══════════════════════════════
-   PARTICLES (dot grid bg)
+   PARTICLES
 ══════════════════════════════ */
 .particles {
     position: fixed;
@@ -42,7 +42,6 @@ body {
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
-/* logo */
 .logo {
     font-size: 1rem;
     font-weight: 700;
@@ -51,12 +50,11 @@ body {
     flex-shrink: 0;
 }
 
-/* desktop nav links */
+/* desktop nav links — center */
 .nav-links {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    margin-left: 1rem;
 }
 
 .nav-links a {
@@ -72,7 +70,7 @@ body {
 
 .nav-links a:hover { color: #111; background: #f5f5f3; }
 
-/* desktop auth buttons pushed to the right */
+/* desktop auth — right */
 .nav-auth {
     display: flex;
     align-items: center;
@@ -80,7 +78,7 @@ body {
     margin-left: auto;
 }
 
-/* hamburger — HIDDEN on desktop */
+/* hamburger — hidden on desktop, shown on mobile */
 .hamburger {
     display: none;
     flex-direction: column;
@@ -90,8 +88,8 @@ body {
     border: none;
     cursor: pointer;
     padding: 6px;
-    margin-left: 0.5rem;
     flex-shrink: 0;
+    margin-left: auto;
 }
 
 .hamburger span {
@@ -103,56 +101,73 @@ body {
     transition: all 0.25s;
 }
 
-/* X animation when active */
 .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
 .hamburger.active span:nth-child(2) { opacity: 0; }
 .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-/* mobile dropdown — HIDDEN by default, shown when .open */
-.mobile-menu {
+/* ── Mobile dropdown ──
+   Lives OUTSIDE .navbar in the HTML.
+   position: fixed so it always sits just below the navbar.
+   Hidden until JS adds .open
+── */
+.mobile-dropdown {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 64px;
     left: 0;
     right: 0;
-    background: #fff;
-    border-bottom: 2px solid #ebebeb;
-    flex-direction: column;
-    padding: 1rem 1.5rem 1.5rem;
-    gap: 0.5rem;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     z-index: 499;
+    background: #fff;
+    border-bottom: 1px solid #ebebeb;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    flex-direction: column;
+    padding: 0.75rem 1.5rem 1.25rem;
 }
 
-.mobile-menu.open { display: flex; }
+.mobile-dropdown.open { display: flex; }
 
-.mobile-menu a {
+/* plain links in dropdown */
+.mobile-dropdown a {
     font-size: 0.9rem;
     font-weight: 500;
     color: #555;
     text-decoration: none;
-    padding: 0.55rem 0.25rem;
-    border-bottom: 1px solid #f0f0ee;
+    padding: 0.7rem 0.25rem;
+    border-bottom: 1px solid #f5f5f3;
+    display: block;
     transition: color 0.18s;
 }
 
-.mobile-menu a:last-child { border-bottom: none; }
-.mobile-menu a:hover { color: #111; }
+.mobile-dropdown a:hover { color: #111; }
 
-.mobile-menu hr {
-    border: none;
-    border-top: 1px solid #ebebeb;
-    margin: 0.25rem 0;
+.dropdown-divider {
+    height: 1px;
+    background: #ebebeb;
+    margin: 0.5rem 0;
 }
 
-/* override btn styles inside mobile menu */
-.mobile-menu .btn {
+/* auth buttons in dropdown */
+.mobile-dropdown .dropdown-btn {
+    display: block;
     border-bottom: none;
-    padding: 0.55rem 1rem;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
     text-align: center;
-    justify-content: center;
-    width: 100%;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 0.35rem;
+    transition: all 0.18s;
 }
+
+.mobile-dropdown .btn-register { background: #111; color: #fff; }
+.mobile-dropdown .btn-register:hover { background: #333; }
+
+.mobile-dropdown .btn-login { background: transparent; color: #888; border: 1px solid #ddd; }
+.mobile-dropdown .btn-login:hover { border-color: #aaa; color: #111; }
+
+.mobile-dropdown .btn-admin { background: #1a1816; color: #e8924a; border: 1px solid #3a2e22; }
+.mobile-dropdown .btn-admin:hover { background: #e8924a; color: #111; }
 
 /* ══════════════════════════════
    BUTTONS
@@ -231,7 +246,7 @@ body {
     color: #999;
     line-height: 1.8;
     margin-bottom: 2.5rem;
-    max-width: 560px;
+    max-width: 540px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -243,10 +258,7 @@ body {
     gap: 0.75rem;
 }
 
-.hero-btns .btn {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.95rem;
-}
+.hero-btns .btn { padding: 0.75rem 1.5rem; font-size: 0.95rem; }
 
 /* ══════════════════════════════
    ITEMS SECTION
@@ -266,11 +278,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.items-header h2 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #111;
-}
+.items-header h2 { font-size: 1.4rem; font-weight: 700; color: #111; }
 
 .items-header a {
     font-size: 0.82rem;
@@ -281,7 +289,7 @@ body {
 }
 .items-header a:hover { color: #111; }
 
-/* ── Filter tabs ── */
+/* filter tabs */
 .filter-tabs {
     display: flex;
     gap: 0.4rem;
@@ -305,14 +313,16 @@ body {
 .tab:hover  { color: #444; border-color: #bbb; }
 .tab.active { background: #111; color: #fff; border-color: #111; }
 
-/* ── Items grid ── */
+/* items grid */
 .items-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
-/* ── Item card ── */
+/* ══════════════════════════════
+   ITEM CARD
+══════════════════════════════ */
 .item-card {
     background: #fff;
     border: 1px solid #ebebeb;
@@ -330,7 +340,6 @@ body {
     transform: translateY(-3px);
 }
 
-/* image zone — fixed height, image fills it */
 .card-img {
     position: relative;
     height: 170px;
@@ -348,12 +357,10 @@ body {
     display: block;
 }
 
-/* hide broken / null images */
 .card-img img[src="null"],
 .card-img img[src=""],
 .card-img img:not([src]) { display: none; }
 
-/* lost / found badge on image */
 .type-badge {
     position: absolute;
     top: 0.6rem;
@@ -369,7 +376,6 @@ body {
 .type-badge.lost  { background: rgba(255,241,241,0.92); color: #d94f4f; border: 1px solid #fbd5d5; }
 .type-badge.found { background: rgba(240,253,246,0.92); color: #2e9e66; border: 1px solid #c6f0dc; }
 
-/* card text body */
 .card-body {
     padding: 0.85rem 1rem 0.6rem;
     flex: 1;
@@ -382,7 +388,6 @@ body {
 .card-loc  { font-size: 0.75rem; color: #aaa; }
 .card-desc { font-size: 0.75rem; color: #bbb; line-height: 1.5; margin-top: 0.15rem; }
 
-/* card footer */
 .card-footer {
     display: flex;
     align-items: center;
@@ -392,15 +397,10 @@ body {
     margin-top: auto;
 }
 
-.card-user {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+.card-user { display: flex; align-items: center; gap: 0.5rem; }
 
 .avatar {
-    width: 26px;
-    height: 26px;
+    width: 26px; height: 26px;
     border-radius: 50%;
     background: #f0f0ee;
     border: 1px solid #e4e4e0;
@@ -425,11 +425,9 @@ body {
     border-radius: 6px;
     background: #fafaf8;
     transition: all 0.18s;
-    white-space: nowrap;
 }
 .btn-view:hover { background: #111; border-color: #111; color: #fff; }
 
-/* empty state */
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
@@ -456,18 +454,8 @@ body {
     border-top: 1px solid #ebebeb;
 }
 
-.how-section h2 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 0.5rem;
-}
-
-.how-sub {
-    font-size: 0.9rem;
-    color: #999;
-    margin-bottom: 2.5rem;
-}
+.how-section h2 { font-size: 1.6rem; font-weight: 700; color: #111; margin-bottom: 0.5rem; }
+.how-sub { font-size: 0.9rem; color: #999; margin-bottom: 2.5rem; }
 
 .steps-grid {
     display: grid;
@@ -492,8 +480,7 @@ body {
 }
 
 .step-num {
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     background: #111;
     color: #fff;
@@ -526,21 +513,22 @@ body {
    RESPONSIVE — tablet
 ══════════════════════════════ */
 @media (max-width: 960px) {
-    .items-grid  { grid-template-columns: repeat(2, 1fr); }
-    .steps-grid  { grid-template-columns: 1fr; max-width: 420px; }
+    .items-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-grid { grid-template-columns: 1fr; max-width: 420px; }
 }
 
 /* ══════════════════════════════
    RESPONSIVE — mobile
 ══════════════════════════════ */
 @media (max-width: 640px) {
+    .navbar     { padding: 0 1.25rem; }
 
-    /* show hamburger, hide desktop links and auth */
-    .hamburger  { display: flex; }
+    /* hide desktop elements */
     .nav-links  { display: none; }
     .nav-auth   { display: none; }
 
-    .navbar { padding: 0 1.25rem; }
+    /* show hamburger */
+    .hamburger  { display: flex; }
 
     /* hero */
     .hero { min-height: auto; padding: 3rem 1.25rem; }

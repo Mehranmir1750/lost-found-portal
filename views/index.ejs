@@ -113,6 +113,7 @@
                 <div class="card-body">
                     <div class="card-name"><%= item.item_name %></div>
                     <div class="card-loc">📍 <%= item.location %></div>
+                    <div class="item-landmark"> <%= item.landmark %> </div>
                     <% if (item.description) { %>
                     <div class="card-desc">
                         <%= item.description.substring(0, 90) %><%= item.description.length > 90 ? '...' : '' %>

@@ -94,6 +94,7 @@ app.get("/", async (req, res) => {
         items.category,
         items.description,
         items.location,
+        items.landmark,
         items.created_at,
         users.first_name,
         users.last_name,
@@ -334,6 +335,7 @@ app.get("/login_dashboard", async (req, res) => {
         items.category,
         items.description,
         items.location,
+        items.landmark,
         items.created_at,
         users.first_name,
         users.last_name,
@@ -394,6 +396,7 @@ app.get("/search", async (req, res) => {
         items.category,
         items.description,
         items.location,
+        items.landmark,
         items.created_at,
         users.first_name,
         users.last_name,
@@ -405,6 +408,7 @@ app.get("/search", async (req, res) => {
         items.item_name ILIKE $1
         OR items.description ILIKE $1
         OR items.location ILIKE $1
+        OR items.landmark ILIKE $1
       ORDER BY items.created_at DESC`,
       [`%${query}%`]
     );
@@ -441,7 +445,7 @@ app.post("/items", upload.single("image"), async (req, res) => {
     return res.redirect("/login");
   }
 
-  const { type, item_name, category, description, location } = req.body;
+  const { type, item_name, category, description, location, landmark } = req.body;
   const userId = req.session.user.id;
 
 //   const imagePath = "/uploads/" + req.file.filename;
@@ -451,9 +455,9 @@ app.post("/items", upload.single("image"), async (req, res) => {
   try {
     await pool.query(
       `INSERT INTO items 
-       (user_id, type, item_name, category, description, location,image) 
-       VALUES ($1, $2, $3, $4, $5, $6,$7)`,
-      [userId, type, item_name, category, description, location,imagePath]
+       (user_id, type, item_name, category, description, location,image, landmark) 
+       VALUES ($1, $2, $3, $4, $5, $6,$7, $8)`,
+      [userId, type, item_name, category, description, location,imagePath, landmark]
 
 
       
@@ -507,6 +511,7 @@ app.get("/items/:id", async (req, res) => {
       item_name: row.item_name,
       description: row.description,
       location: row.location,
+      landmark: row.landmark,
       type: row.type,
       status: row.status,
       created_at: row.created_at,
@@ -889,13 +894,13 @@ app.post("/items/:id/edit", async (req, res) => {
   if (!req.session.user) return res.redirect("/login");
 
   try {
-    const { item_name, category, location, description } = req.body;
+    const { item_name, category, location, description, landmark } = req.body;
 
     await pool.query(
       `UPDATE items 
-       SET item_name=$1, category=$2, location=$3, description=$4 
-       WHERE id=$5 AND user_id=$6`,
-      [item_name, category, location, description, req.params.id, req.session.user.id]
+       SET item_name=$1, category=$2, location=$3, description=$4 , landmark = $5
+       WHERE id=$6 AND user_id=$7`,
+      [item_name, category, location, description, landmark, req.params.id, req.session.user.id]
     );
 
     res.redirect("/my-posts");

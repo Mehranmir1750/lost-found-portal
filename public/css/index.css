@@ -543,3 +543,17 @@ body {
     .how-section { padding: 2.5rem 1.25rem; }
     .steps-grid  { grid-template-columns: 1fr; }
 }
+
+
+.item-landmark {
+    font-size: 0.75rem;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.item-landmark::before {
+    content: '🏛️';
+    font-size: 0.8rem;
+}

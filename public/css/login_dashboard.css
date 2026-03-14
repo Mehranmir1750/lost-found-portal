@@ -455,3 +455,18 @@ body {
     overflow: hidden;
     border-bottom: 1px solid #f0f0ee;
 }
+
+.item-landmark {
+    font-size: 0.75rem;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    
+}
+
+.item-landmark::before {
+    content: '🏛️';
+    font-size: 0.8rem;
+    
+}

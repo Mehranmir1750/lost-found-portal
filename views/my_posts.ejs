@@ -50,7 +50,11 @@
                  data-status="<%= item.is_closed ? 'closed' : 'active' %>">
 
                 <div class="post-image">
-                    📦
+                     <% if (item.image) { %>
+        <img src="<%= item.image %>" alt="<%= item.item_name %>">
+    <% } else { %>
+        <div class="no-image">📦</div>
+    <% } %>
                     <div class="post-badges">
                         <span class="status-badge <%= item.type.toLowerCase() %>">
                             <%= item.type %>
@@ -70,6 +74,7 @@
 
                     <div class="post-meta">
                         <div class="meta-item">📍 <%= item.location %></div>
+                        <div class="item-landmark"> <%= item.landmark %> </div>
                         <div class="meta-item">📅 <%= new Date(item.created_at).toDateString() %></div>
                         <% if (item.is_closed) { %>
                         <div class="meta-item">✅ Case Closed</div>
@@ -106,6 +111,10 @@
                         <div class="edit-row">
                             <label>Location</label>
                             <input type="text" name="location" value="<%= item.location %>">
+                        </div>
+                        <div class="edit-row">
+                            <label>Location</label>
+                            <input type="text" name="landmark" value="<%= item.landmark %>">
                         </div>
                         <div class="edit-row">
                             <label>Description</label>

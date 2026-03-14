@@ -30,7 +30,7 @@
         </div>
     </nav> -->
 
-    <nav class="navbar">
+    <!-- <nav class="navbar">
     <div class="logo">IUST Found & Lost Portal</div>
     <div class="mobile-menu" onclick="toggleMenu()">
         <span></span>
@@ -40,13 +40,37 @@
     <div class="nav-links" id="navLinks">
         <a href="/">Home</a>
         <a href="#how">How It Works</a>
-        <!-- <a href="#categories">Categories</a> -->
-        <!-- <a href="#contact">Contact</a> -->
+        <a href="#categories">Categories</a> -->
+        <!-- <a href="#contact">Contact</a>
         <div class="auth-buttons">
             <a href="/register" class="btn btn-register">Register</a>
             <a href="/login" class="btn btn-login">Login</a>
             <a href="/admin/login" class="btn btn-admin">Admin</a>
         </div>
+    </div>
+</nav> -->
+
+<nav class="navbar">
+    <div class="logo">IUST Found & Lost Portal</div>
+
+    <!-- Auth buttons always visible, even on mobile -->
+    <div class="auth-buttons">
+        <a href="/register" class="btn btn-register">Register</a>
+        <a href="/login" class="btn btn-login">Login</a>
+        <a href="/admin/login" class="btn btn-admin">Admin</a>
+    </div>
+
+    <!-- Hamburger — shows on mobile for nav links only -->
+    <div class="mobile-menu" onclick="toggleMenu()" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Nav links — hidden on mobile until hamburger clicked -->
+    <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="#how">How It Works</a>
     </div>
 </nav>
 
@@ -265,6 +289,27 @@
                 }
             });
         }
+
+
+
+        
+    function toggleMenu() {
+        const nav = document.getElementById('navLinks');
+        const burger = document.getElementById('hamburger');
+        nav.classList.toggle('open');
+        burger.classList.toggle('active');
+    }
+
+    function filterItems(type) {
+        const cards = document.querySelectorAll('.item-card');
+        const tabs  = document.querySelectorAll('.filter-tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+        cards.forEach(card => {
+            card.style.display = (type === 'all' || card.dataset.type === type) ? 'block' : 'none';
+        });
+    }
+
     </script>
 </body>
 </html>

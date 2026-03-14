@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posts - IUST Found & Lost</title>
+    <link rel="stylesheet" href="/css/my_posts.css">
+</head>
+<body>
+    <%- include("partials/navbar") %>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>My Posts 📝</h1>
+            <p>Manage all your lost and found item listings</p>
+        </div>
+
+        <div class="controls-bar">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterPosts('all')">All Posts</button>
+                <button class="filter-tab" onclick="filterPosts('lost')">Lost</button>
+                <button class="filter-tab" onclick="filterPosts('found')">Found</button>
+                <button class="filter-tab" onclick="filterPosts('active')">Active</button>
+                <button class="filter-tab" onclick="filterPosts('closed')">Closed</button>
+            </div>
+            <div class="sort-dropdown">
+                <label>Sort by:</label>
+                <select onchange="sortPosts(this.value)">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="status">Status</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="posts-grid">
+
+            <% if (items.length === 0) { %>
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-title">No posts yet</div>
+                <div class="empty-state-text">You haven't posted any items yet.</div>
+                <a href="/items/new" class="empty-state-btn">Create Your First Post</a>
+            </div>
+            <% } %>
+
+            <% items.forEach(item => { %>
+            <div class="post-card <%= item.is_closed ? 'closed' : '' %>"
+                 data-type="<%= item.type.toLowerCase() %>"
+                 data-status="<%= item.is_closed ? 'closed' : 'active' %>">
+
+                <div class="post-image">
+                    📦
+                    <div class="post-badges">
+                        <span class="status-badge <%= item.type.toLowerCase() %>">
+                            <%= item.type %>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="post-content">
+                    <div class="post-header">
+                        <div>
+                            <div class="post-title"><%= item.item_name %></div>
+                            <div class="post-category"><%= item.category %></div>
+                        </div>
+                    </div>
+
+                    <div class="post-description"><%= item.description %></div>
+
+                    <div class="post-meta">
+                        <div class="meta-item">📍 <%= item.location %></div>
+                        <div class="meta-item">📅 <%= new Date(item.created_at).toDateString() %></div>
+                        <% if (item.is_closed) { %>
+                        <div class="meta-item">✅ Case Closed</div>
+                        <% } %>
+                    </div>
+
+                    <div class="post-footer">
+                        <div class="post-date">Posted on <%= new Date(item.created_at).toDateString() %></div>
+
+                        <div class="post-actions">
+                            <a href="/items/<%= item.id %>" class="action-btn view">View</a>
+                            <% if (!item.is_closed) { %>
+                                <button class="action-btn edit" onclick="toggleEdit('<%= item.id %>')">Edit</button>
+                                <form action="/items/<%= item.id %>/close" method="POST" style="display:inline;">
+                                    <button class="action-btn close">Close</button>
+                                </form>
+                            <% } %>
+                            <form action="/items/<%= item.id %>/delete" method="POST" style="display:inline;">
+                                <button class="action-btn delete">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- INLINE EDIT FORM -->
+                    <form class="edit-form" id="edit-<%= item.id %>" action="/items/<%= item.id %>/edit" method="POST">
+                        <div class="edit-row">
+                            <label>Item Name</label>
+                            <input type="text" name="item_name" value="<%= item.item_name %>">
+                        </div>
+                        <div class="edit-row">
+                            <label>Category</label>
+                            <input type="text" name="category" value="<%= item.category %>">
+                        </div>
+                        <div class="edit-row">
+                            <label>Location</label>
+                            <input type="text" name="location" value="<%= item.location %>">
+                        </div>
+                        <div class="edit-row">
+                            <label>Description</label>
+                            <textarea name="description" rows="3"><%= item.description %></textarea>
+                        </div>
+                        <div class="edit-actions">
+                            <button type="submit" class="action-btn view">Save</button>
+                            <button type="button" class="action-btn close" onclick="toggleEdit('<%= item.id %>')">Cancel</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <% }) %>
+
+        </div>
+    </div>
+
+    <!-- Close Modal -->
+    <div class="modal" id="closeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">✅</div>
+                <div class="modal-title">Close This Case?</div>
+                <div class="modal-text">Mark this item as closed if you've found the owner or recovered the item.</div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="confirmClose()">Mark as Closed</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">⚠️</div>
+                <div class="modal-title">Delete This Post?</div>
+                <div class="modal-text">Are you sure you want to delete this post? This action cannot be undone.</div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn danger" onclick="confirmDelete()">Delete Post</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle inline edit form
+        function toggleEdit(id) {
+            const form = document.getElementById('edit-' + id);
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Filter posts by type or status
+        function filterPosts(filter) {
+            const cards = document.querySelectorAll('.post-card');
+            const tabs = document.querySelectorAll('.filter-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            cards.forEach(card => {
+                const type   = card.dataset.type;
+                const status = card.dataset.status;
+
+                if (filter === 'all')    card.style.display = 'flex';
+                else if (filter === 'lost')   card.style.display = type === 'lost'     ? 'flex' : 'none';
+                else if (filter === 'found')  card.style.display = type === 'found'    ? 'flex' : 'none';
+                else if (filter === 'active') card.style.display = status === 'active' ? 'flex' : 'none';
+                else if (filter === 'closed') card.style.display = status === 'closed' ? 'flex' : 'none';
+            });
+        }
+
+        // Sort posts
+        function sortPosts(value) {
+            const grid  = document.querySelector('.posts-grid');
+            const cards = Array.from(document.querySelectorAll('.post-card'));
+
+            cards.sort((a, b) => {
+                const dateA = new Date(a.querySelector('.post-date').textContent.replace('Posted on ', ''));
+                const dateB = new Date(b.querySelector('.post-date').textContent.replace('Posted on ', ''));
+                if (value === 'newest') return dateB - dateA;
+                if (value === 'oldest') return dateA - dateB;
+                return 0;
+            });
+
+            cards.forEach(card => grid.appendChild(card));
+        }
+    </script>
+
+</body>
+</html>

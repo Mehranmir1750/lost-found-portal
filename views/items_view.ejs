@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= item.item_name %> - IUST Found & Lost</title>
+    <link rel="stylesheet" href="/css/items_view.css">
+</head>
+<body>
+
+<!-- NAVBAR (exact from dashboard) -->
+<%- include("partials/navbar") %>
+
+<!-- PAGE -->
+<div class="page">
+
+    <a href="/login_dashboard" class="back-link">← Back to Dashboard</a>
+
+    <!-- Hero -->
+    <div class="item-hero">
+        📦
+        <span class="item-status <%= item.type.toLowerCase() %>"><%= item.type %></span>
+    </div>
+
+    <!-- Grid -->
+    <div class="content-grid">
+
+        <!-- LEFT: Details -->
+        <div class="card">
+            <div class="detail-title"><%= item.item_name %></div>
+
+            <div class="detail-meta">
+                <span>📅 <%= new Date(item.created_at).toDateString() %></span>
+                <span>📍 <%= item.location %></span>
+            </div>
+
+            <div class="label">Description</div>
+            <p class="detail-description"><%= item.description %></p>
+
+            <div class="label">Details</div>
+
+            <div class="detail-row">
+                <span class="row-icon">🏷️</span>
+                <div>
+                    <div class="row-label">Item Name</div>
+                    <div class="row-value"><%= item.item_name %></div>
+                </div>
+            </div>
+            <div class="detail-row">
+                <span class="row-icon">📍</span>
+                <div>
+                    <div class="row-label">Location</div>
+                    <div class="row-value"><%= item.location %></div>
+                </div>
+            </div>
+            <div class="detail-row">
+                <span class="row-icon">🔖</span>
+                <div>
+                    <div class="row-label">Status</div>
+                    <div class="row-value"><%= item.type %></div>
+                </div>
+            </div>
+            <div class="detail-row">
+                <span class="row-icon">📆</span>
+                <div>
+                    <div class="row-label">Posted On</div>
+                    <div class="row-value"><%= new Date(item.created_at).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Sidebar -->
+        <div class="sidebar">
+
+            <!-- Posted By -->
+            <div class="card">
+                <h3>Posted By</h3>
+                <div class="poster-row">
+                    <div class="poster-avatar">👤</div>
+                    <div>
+                        <div class="poster-name"><%= item.user.first_name %> <%= item.user.last_name %></div>
+                        <div class="poster-date">Posted <%= new Date(item.created_at).toDateString() %></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact (NOT owner) -->
+            <!-- <% if (!isOwner) { %>
+            <div class="card">
+                <h3>Contact Poster</h3>
+                <a href="mailto:<%= item.user.email %>" class="item-btn">✉️ Email Poster</a>
+                <a href="tel:<%= item.user.phone || '' %>" class="item-btn">📞 Call Poster</a>
+            </div>
+            <% } %> -->
+
+            <% if (user && !isOwner) { %>
+  <div class="card">
+    <h3>Claim This Item</h3>
+
+    <p style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 15px;">
+      Think this item belongs to you? Send a request to the person who posted it.
+      Your contact details will be shared only after approval.
+    </p>
+
+    <textarea
+      id="claimMessage"
+      placeholder="Briefly explain why you think this item is yours"
+      style="
+        width: 100%;
+        min-height: 80px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 10px;
+        color:blacks;
+        font-size: 13px;
+        margin-bottom: 12px;
+        resize: none;
+      "
+    ></textarea>
+
+    <button class="item-btn" onclick="sendClaimRequest()">
+      🤝 This is mine
+    </button>
+  </div>
+<% } %>
+
+
+            <!-- Manage (owner only) -->
+            <% if (isOwner) { %>
+            <div class="card">
+                <h3>Manage Listing</h3>
+                <a href="/items/<%= item.id %>/edit" class="item-btn edit-btn">✏️ Edit Item</a>
+                <% if (item.type.toLowerCase() !== 'closed') { %>
+                <button class="item-btn close-btn" onclick="closeItem()">✔️ Mark as Closed</button>
+                <% } %>
+                <button class="item-btn delete-btn" onclick="openDeleteModal()">🗑️ Delete Listing</button>
+            </div>
+            <% } %>
+
+            <!-- Report (NOT owner) -->
+            <% if (!isOwner) { %>
+            <div class="card">
+                <button class="item-btn report-btn" onclick="reportItem()">⚑ Report this listing</button>
+            </div>
+            <% } %>
+
+        </div>
+    </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <div class="modal-icon">🗑️</div>
+        <h3>Delete this listing?</h3>
+        <p>This will permanently remove the post. This action cannot be undone.</p>
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" onclick="closeDeleteModal()">Cancel</button>
+            <button class="modal-btn confirm" onclick="confirmDelete()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+    <span id="toastIcon">✔️</span>
+    <span id="toastMsg">Done!</span>
+</div>
+
+<script>
+    // ─── Toast ───
+    function showToast(msg, icon = '✔️') {
+        document.getElementById('toastMsg').textContent  = msg;
+        document.getElementById('toastIcon').textContent = icon;
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    // ─── Delete modal ───
+    function openDeleteModal()  { document.getElementById('deleteModal').classList.add('active'); }
+    function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('active'); }
+
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) closeDeleteModal();
+    });
+
+    function confirmDelete() {
+        closeDeleteModal();
+        fetch('/items/<%= item.id %>', {
+            method: 'DELETE',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => {
+            if (res.ok) {
+                showToast('Listing deleted', '🗑️');
+                setTimeout(() => window.location.href = '/dashboard', 1600);
+            } else {
+                showToast('Failed. Try again.', '⚠️');
+            }
+        })
+        .catch(() => showToast('Something went wrong.', '⚠️'));
+    }
+
+    // ─── Close item ───
+    function closeItem() {
+        fetch('/items/<%= item.id %>/close', {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => {
+            if (res.ok) {
+                showToast('Marked as Closed', '✔️');
+                setTimeout(() => location.reload(), 1600);
+            } else {
+                showToast('Failed. Try again.', '⚠️');
+            }
+        })
+        .catch(() => showToast('Something went wrong.', '⚠️'));
+    }
+
+    // ─── Report ───
+    function reportItem() {
+        showToast('Report submitted for review', '⚑');
+    }
+
+
+
+    function sendClaimRequest() {
+    const message = document.getElementById("claimMessage").value.trim();
+
+    if (!message) {
+      showToast("Please add a short explanation", "⚠️");
+      return;
+    }
+
+    fetch("/items/<%= item.id %>/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: "message=" + encodeURIComponent(message)
+    })
+    .then(res => {
+      if (res.ok) {
+        showToast("Request sent to the owner", "✔️");
+        document.getElementById("claimMessage").value = "";
+      } else {
+        showToast("Failed to send request", "⚠️");
+      }
+    })
+    .catch(() => showToast("Server error", "⚠️"));
+  }
+</script>
+
+</body>
+</html>

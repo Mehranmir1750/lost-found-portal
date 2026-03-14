@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - IUST Found & Lost</title>
+    <link rel="stylesheet" href="/css/login_dashboard.css">
+</head>
+<body>
+
+    <%- include("partials/navbar") %>
+
+    
+
+    <div class="dashboard">
+        <div class="welcome-section">
+            <h1 id="welcomeMsg">Welcome back! 👋</h1>
+            <p>Here's what's happening with your account today</p>
+        </div>
+
+        <div class="quick-actions">
+            <h2 class="section-title">Quick Actions</h2>
+            <div class="action-buttons">
+                <div class="action-card primary">
+                    <a href="/items/new?type=Lost" class="card-link"></a>
+                    <div class="action-icon">📢</div>
+                    <div class="action-title">Report Lost Item</div>
+                    <div class="action-desc">Post details about an item you've lost</div>
+                </div>
+                <div class="action-card">
+                    <a href="/items/new?type=Found" class="card-link"></a>
+                    <div class="action-icon">✨</div>
+                    <div class="action-title">Report Found Item</div>
+                    <div class="action-desc">Help someone by posting what you found</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-items">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('all')">All Items</button>
+               
+            </div>
+
+            <div class="items-filter" id="itemsFilter">
+                <button class="filter-btn active" onclick="filterItems('all')">All Items</button>
+                <button class="filter-btn" onclick="filterItems('lost')">Lost</button>
+                <button class="filter-btn" onclick="filterItems('found')">Found</button>
+                <button class="filter-btn" onclick="filterItems('Open')">Open</button>
+                <button class="filter-btn" onclick="filterItems('closed')">Closed</button>
+
+                <form action="/search" method="GET">
+    <input 
+        type="text" 
+        name="q" 
+        placeholder="Search lost or found items..."
+        value="<%= typeof search !== 'undefined' ? search : '' %>"
+        required
+    >
+    <button type="submit">Search</button>
+
+     <a href="/login_dashboard">
+        <button type="button">Clear</button>
+    </a>
+</form>
+
+            </div>
+
+            <!-- <div class="items-grid" id="itemsGrid"></div> -->
+
+
+
+            <div class="items-grid">
+
+<% if (items.length === 0) { %>
+  <p style="color:white;">No items yet</p>
+<% } %>
+
+<% items.forEach(item => { %>
+
+    <div class="item-card"
+     data-type="<%= item.type.toLowerCase() %>"
+     data-status="<%= item.status || 'Open' %>">
+    <div class="item-image">
+        <div class="item-content">
+      <!-- <img src <%= item.image %>> -->
+
+      <!-- <img src="<%= item.image %>" alt="Item Image" style="height: 200px; width: 400px; margin-right: 40px; margin-left: -20px; margin-top: -20px;"> -->
+
+      <img src="<%= item.image %>" alt="Item Image">
+
+      <!-- <span class="item-status <%= item.type.toLowerCase() %>">
+        <%= item.type %>
+      </span> -->
+
+
+      <span class="item-status <%= item.type.toLowerCase() %>">
+  <%= item.type %>
+</span>
+
+<span class="item-Openclose <%= item.status === 'closed' ? 'closed' : 'Open' %>">
+  <%= item.status === 'closed' ? 'Closed' : 'Open' %>
+</span>
+
+
+      </div>
+    </div>
+
+    <div class="item-content">
+        <!-- <img src="<%= item.image %>" alt="item image" width="200"> -->
+
+      <div class="item-title"><%= item.item_name %></div>
+      <div class="item-details"><%= item.description %></div>
+      <div class="item-location">📍 <%= item.location %></div>
+
+      <div class="item-footer">
+        <div class="item-date">
+          <%= new Date(item.created_at).toDateString() %>
+        </div>
+
+        <!-- <a href="/items/<%= item.id %>" class="item-btn">View</a> -->
+         <a href="/items/<%= item.item_id %>" class="item-btn">View</a>
+
+      </div>
+    </div>
+  </div>
+<% }) %>
+
+</div>
+
+
+
+        </div>
+    </div>
+
+    <script>
+        
+
+        let currentView = 'all';
+        let currentFilter = 'all';
+
+        function initializePage() {
+            document.getElementById('userName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+            document.getElementById('welcomeMsg').textContent = `Welcome back, ${currentUser.firstName} ${currentUser.lastName}! 👋`;
+            renderItems();
+        }
+
+
+function filterItems(filter){
+
+    const cards = document.querySelectorAll('.item-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    // remove active class
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    // add active class to clicked button
+    event.target.classList.add('active');
+
+    cards.forEach(card=>{
+        const type = card.dataset.type;
+        const status = card.dataset.status;
+
+        if (filter === "all") {
+            card.style.display = "block";
+        }
+
+        else if (filter === "lost") {
+            card.style.display = type === "lost" ? "block" : "none";
+        }
+
+        else if (filter === "found") {
+            card.style.display = type === "found" ? "block" : "none";
+        }
+
+        else if (filter === "Open") {
+            card.style.display = status === "Open" ? "block" : "none";
+        }
+
+        else if (filter === "closed") {
+            card.style.display = status === "closed" ? "block" : "none";
+        }
+    })
+}
+
+        
+        initializePage();
+    </script>
+</body>
+</html>

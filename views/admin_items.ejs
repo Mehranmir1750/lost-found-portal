@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Items</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-dot"></span>
+      <span>KFL Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin" class="snav-item">
+        <span class="snav-icon">◈</span> Dashboard
+      </a>
+      <a href="/admin/items" class="snav-item active">
+        <span class="snav-icon">◫</span> Items
+      </a>
+      <a href="/admin/users" class="snav-item">
+        <span class="snav-icon">◉</span> Users
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/" class="snav-item"><span class="snav-icon">↗</span> View Site</a>
+      <a href="/admin/logout" class="snav-item danger"><span class="snav-icon">⏻</span> Logout</a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <header class="admin-topbar">
+      <div>
+        <h2 class="page-title">All Items</h2>
+        <p class="page-sub"><%= items.length %> total items</p>
+      </div>
+    </header>
+
+    <div class="admin-card full">
+      <div class="admin-card-header">
+        <h3>Items</h3>
+        <input class="admin-search" type="text" placeholder="Filter by name…"
+               oninput="filterTable(this.value)">
+      </div>
+
+      <table class="admin-table" id="itemsTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Item Name</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Posted By</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach((item, i) => { %>
+          <tr>
+            <td class="td-muted"><%= i + 1 %></td>
+            <td class="td-bold"><%= item.item_name %></td>
+            <td><span class="pill <%= item.type.toLowerCase() %>"><%= item.type %></span></td>
+            <td class="td-muted"><%= item.category || '—' %></td>
+            <td class="td-muted"><%= item.location %></td>
+            <td>
+              <span class="pill <%= item.status === 'closed' ? 'closed' : 'open' %>">
+                <%= item.status === 'closed' ? 'Closed' : 'Open' %>
+              </span>
+            </td>
+            <td class="td-muted"><%= item.first_name %> <%= item.last_name %></td>
+            <td class="td-muted"><%= new Date(item.created_at).toLocaleDateString() %></td>
+            <td>
+              <div class="td-actions">
+                <a href="/items/<%= item.id %>" class="admin-btn view" target="_blank">View</a>
+                <form method="POST" action="/admin/items/<%= item.id %>/delete"
+                      onsubmit="return confirm('Delete this item?')">
+                  <button type="submit" class="admin-btn delete">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <script>
+    function filterTable(val) {
+      const rows = document.querySelectorAll('#itemsTable tbody tr');
+      rows.forEach(row => {
+        row.style.display =
+          row.cells[1].textContent.toLowerCase().includes(val.toLowerCase())
+            ? '' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>

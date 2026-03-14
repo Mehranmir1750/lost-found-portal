@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notifications – IUST Found & Lost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/css/notifications.css">
+
+  
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<%- include("partials/navbar") %>
+
+<!-- PAGE -->
+<div class="page">
+  <div class="page-header">
+    <h1>Notifications 🔔</h1>
+    <div class="subtitle">
+      <span>Stay updated on your items and requests</span>
+      <span class="mark-all-read" onclick="markAllRead()">Mark all as read</span>
+    </div>
+  </div>
+
+  <!-- FILTER TABS -->
+  <div class="filter-tabs">
+    <button class="filter-btn active" onclick="filterNotifications('all')">All</button>
+    <button class="filter-btn" onclick="filterNotifications('unread')">Unread</button>
+    <button class="filter-btn" onclick="filterNotifications('approved')">Approved</button>
+    <button class="filter-btn" onclick="filterNotifications('rejected')">Rejected</button>
+    <button class="filter-btn" onclick="filterNotifications('new-request')">New Requests</button>
+  </div>
+
+  <!-- NOTIFICATIONS LIST -->
+  <div id="notificationsList">
+    
+    <!-- EXAMPLE: Request Approved Notification -->
+    <% notifications.forEach(n => { %>
+  <div class="notification <%= n.type %> <%= n.is_read ? '' : 'unread' %>"
+       data-type="<%= n.type %>">
+
+    <div class="notif-header">
+      <div class="notif-icon">
+        <%= n.type === 'approved' ? '✅' : n.type === 'rejected' ? '❌' : '📬' %>
+      </div>
+
+      <div class="notif-content">
+        <div class="notif-title"><%= n.title %></div>
+        <div class="notif-message"><%= n.message %></div>
+      </div>
+    </div>
+
+    <div class="notif-footer">
+      <div class="notif-time">
+        🕒 <%= new Date(n.created_at).toLocaleString() %>
+      </div>
+
+      <% if (n.item_id) { %>
+        <a href="/items/<%= n.item_id %>" class="btn btn-secondary">
+          View Item
+        </a>
+      <% } %>
+    </div>
+
+  </div>
+<% }) %>
+
+
+
+    <!-- EMPTY STATE (when no notifications) -->
+    <!-- <div class="empty">
+      <div class="empty-icon">🔕</div>
+      <h2>All caught up!</h2>
+      <p>You don't have any new notifications</p>
+      <a href="/login_dashboard" class="btn btn-primary">Go to Dashboard</a>
+    </div> -->
+
+  </div>
+</div>
+
+<script>
+  // Filter notifications
+  function filterNotifications(type) {
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const notifications = document.querySelectorAll('.notification');
+    notifications.forEach(notif => {
+      if (type === 'all') {
+        notif.style.display = 'block';
+      } else if (type === 'unread') {
+        notif.style.display = notif.classList.contains('unread') ? 'block' : 'none';
+      } else {
+        notif.style.display = notif.dataset.type === type ? 'block' : 'none';
+      }
+    });
+  }
+
+  // Mark all as read
+  function markAllRead() {
+    const notifications = document.querySelectorAll('.notification.unread');
+    notifications.forEach(notif => {
+      notif.classList.remove('unread');
+    });
+    
+    // You would also make an API call here to update the backend
+    console.log('Marked all notifications as read');
+  }
+
+  // Dismiss notification
+  function dismissNotification(button) {
+    const notification = button.closest('.notification');
+    notification.style.animation = 'fadeOut 0.3s ease-out';
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+    
+    // You would also make an API call here to delete/dismiss the notification
+    console.log('Dismissed notification');
+  }
+
+  // Add fade out animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Mark notification as read when clicked
+  document.addEventListener('DOMContentLoaded', () => {
+    const notifications = document.querySelectorAll('.notification');
+    notifications.forEach(notif => {
+      notif.addEventListener('click', function(e) {
+        // Don't mark as read if clicking a button
+        if (!e.target.classList.contains('btn')) {
+          this.classList.remove('unread');
+          // You would also make an API call here
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

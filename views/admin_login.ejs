@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login – IUST Found & Lost</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-login-body">
+
+  <div class="admin-login-wrap">
+    <div class="admin-login-card">
+
+      <div class="admin-brand">
+        <span class="admin-brand-dot"></span>
+        IUST Found &amp; Lost
+      </div>
+
+      <h1>Admin Panel</h1>
+      <p class="admin-login-sub">Sign in to manage the platform</p>
+
+      <% if (error) { %>
+        <div class="admin-error"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/admin/login" class="admin-login-form">
+        <div class="aform-group">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="admin" required autofocus>
+        </div>
+        <div class="aform-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="admin-btn-submit">Sign In →</button>
+      </form>
+
+    </div>
+  </div>
+
+</body>
+</html>

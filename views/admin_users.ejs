@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Users</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-dot"></span>
+      <span>KFL Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin" class="snav-item"><span class="snav-icon">◈</span> Dashboard</a>
+      <a href="/admin/items" class="snav-item"><span class="snav-icon">◫</span> Items</a>
+      <a href="/admin/users" class="snav-item active"><span class="snav-icon">◉</span> Users</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/" class="snav-item"><span class="snav-icon">↗</span> View Site</a>
+      <a href="/admin/logout" class="snav-item danger"><span class="snav-icon">⏻</span> Logout</a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <header class="admin-topbar">
+      <div>
+        <h2 class="page-title">All Users</h2>
+        <p class="page-sub"><%= users.length %> registered users</p>
+      </div>
+    </header>
+
+    <div class="admin-card full">
+      <div class="admin-card-header">
+        <h3>Users</h3>
+        <input class="admin-search" type="text" placeholder="Filter by name…"
+               oninput="filterUsers(this.value)">
+      </div>
+
+      <table class="admin-table" id="usersTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Posts</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach((u, i) => { %>
+          <tr>
+            <td class="td-muted"><%= i + 1 %></td>
+            <td class="td-bold"><%= u.first_name %> <%= u.last_name %></td>
+            <td class="td-muted"><%= u.email %></td>
+            <td class="td-muted"><%= u.phone || '—' %></td>
+            <td>
+              <span class="pill neutral"><%= u.item_count %> items</span>
+            </td>
+            <td>
+              <form method="POST" action="/admin/users/<%= u.id %>/delete"
+                    onsubmit="return confirm('Delete this user and all their data?')">
+                <button type="submit" class="admin-btn delete">Delete</button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <script>
+    function filterUsers(val) {
+      const rows = document.querySelectorAll('#usersTable tbody tr');
+      rows.forEach(row => {
+        row.style.display =
+          row.cells[1].textContent.toLowerCase().includes(val.toLowerCase())
+            ? '' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>

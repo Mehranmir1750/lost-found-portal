@@ -1,0 +1,392 @@
+/* ══════════════════════════════
+   RESET & BASE
+══════════════════════════════ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f5f3;
+    color: #1a1a1a;
+    min-height: 100vh;
+}
+
+
+/* ══════════════════════════════
+   PAGE
+══════════════════════════════ */
+.page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+
+/* ══════════════════════════════
+   PAGE HEADER
+══════════════════════════════ */
+.page-header {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e8e8e4;
+}
+
+.page-header h1 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -0.4px;
+    margin-bottom: 0.3rem;
+}
+
+.page-header p {
+    font-size: 0.875rem;
+    color: #999;
+}
+
+
+/* ══════════════════════════════
+   TYPE SELECTOR
+══════════════════════════════ */
+.type-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+}
+
+.type-card {
+    background: #fff;
+    border: 1.5px solid #ebebeb;
+    border-radius: 14px;
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    user-select: none;
+}
+
+.type-card:hover {
+    border-color: #bbb;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+.type-card.active {
+    background: #111;
+    border-color: #111;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+}
+
+.type-icon  { font-size: 1.6rem; }
+
+.type-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #111;
+}
+
+.type-desc {
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+.type-card.active .type-title { color: #fff; }
+.type-card.active .type-desc  { color: #666; }
+
+
+/* ══════════════════════════════
+   FORM
+══════════════════════════════ */
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+
+/* ── SECTION CARD ── */
+.form-section {
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 16px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0ee;
+}
+
+.section-num {
+    font-size: 0.6rem;
+    font-weight: 800;
+    color: #ccc;
+    letter-spacing: 1.5px;
+    background: #f5f5f3;
+    border: 1px solid #e8e8e4;
+    border-radius: 5px;
+    padding: 0.2rem 0.5rem;
+}
+
+.section-header h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #111;
+}
+
+
+/* ── FORM GROUP ── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-group label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.req { color: #d94f4f; margin-left: 2px; font-weight: 700; }
+
+.opt {
+    color: #ccc;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.7rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 9px;
+    padding: 0.72rem 0.9rem;
+    color: #111;
+    font-size: 0.875rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #bbb;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: #ccc; }
+
+/* custom select arrow */
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23bbb' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    padding-right: 2.2rem;
+}
+
+.form-group textarea {
+    min-height: 110px;
+    resize: vertical;
+    line-height: 1.65;
+}
+
+/* char count inside label */
+.char-count {
+    font-size: 0.65rem !important;
+    font-weight: 500 !important;
+    color: #ccc !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+}
+
+.char-count.warn { color: #d94f4f !important; }
+
+/* two-column row */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+}
+
+
+/* ── INFO BOX ── */
+.info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    background: #fffbf0;
+    border: 1px solid #f5e2a8;
+    border-radius: 9px;
+    padding: 0.75rem 1rem;
+    font-size: 0.78rem;
+    color: #a07820;
+    line-height: 1.55;
+}
+
+
+/* ══════════════════════════════
+   UPLOAD AREA
+══════════════════════════════ */
+.upload-area {
+    position: relative;
+    border: 1.5px dashed #ddd;
+    border-radius: 12px;
+    padding: 2.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafaf8;
+    transition: all 0.2s;
+    overflow: hidden;  /* keeps input clipped inside */
+}
+
+.upload-area:hover {
+    border-color: #aaa;
+    background: #fff;
+}
+
+.upload-area.dragover {
+    border-color: #111;
+    background: #f0f0ee;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+/* invisible input covers the whole area */
+.upload-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* inner content sits below the input */
+.upload-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    text-align: center;
+    pointer-events: none;  /* clicks pass through to the input above */
+    z-index: 1;
+}
+
+.upload-icon  { font-size: 2rem; line-height: 1; }
+.upload-text  { font-size: 0.82rem; font-weight: 600; color: #888; }
+.upload-hint  { font-size: 0.72rem; color: #bbb; }
+
+/* remove button below upload area */
+.image-preview { margin-top: 0.1rem; }
+
+.remove-img {
+    background: #fff1f1;
+    border: 1px solid #fbd5d5;
+    color: #d94f4f;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.18s;
+}
+
+.remove-img:hover {
+    background: #d94f4f;
+    border-color: #d94f4f;
+    color: #fff;
+}
+
+
+/* ══════════════════════════════
+   FORM ACTIONS
+══════════════════════════════ */
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 0.25rem;
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid #e4e4e0;
+    color: #aaa;
+    padding: 0.72rem 1.5rem;
+    border-radius: 9px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.btn-cancel:hover { border-color: #bbb; color: #555; }
+
+.btn-submit {
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: 0.72rem 1.75rem;
+    border-radius: 9px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
+}
+
+.btn-submit:hover {
+    background: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.btn-submit:active { transform: translateY(0); }
+
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 580px) {
+    .page           { padding: 1.5rem 1.25rem 3rem; }
+    .form-row       { grid-template-columns: 1fr; }
+    .type-selector  { grid-template-columns: 1fr; }
+    .form-section   { padding: 1.25rem; }
+    .form-actions   { flex-direction: column-reverse; }
+    .btn-cancel,
+    .btn-submit     { width: 100%; text-align: center; }
+}

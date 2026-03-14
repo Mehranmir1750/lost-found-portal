@@ -1,0 +1,301 @@
+/* ══════════════════════════════
+   RESET & BASE
+══════════════════════════════ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f5f3;
+    color: #1a1a1a;
+    min-height: 100vh;
+}
+
+
+/* ══════════════════════════════
+   PAGE
+══════════════════════════════ */
+.page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+
+/* ══════════════════════════════
+   PAGE HEADER
+══════════════════════════════ */
+.page-header {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e8e8e4;
+}
+
+.page-header h1 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -0.4px;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.subtitle span {
+    font-size: 0.875rem;
+    color: #999;
+}
+
+.mark-all-read {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: #555 !important;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #e4e4e0;
+    background: #fff;
+    transition: all 0.18s;
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.mark-all-read:hover {
+    background: #111;
+    color: #fff !important;
+    border-color: #111;
+}
+
+
+/* ══════════════════════════════
+   FILTER TABS
+══════════════════════════════ */
+.filter-tabs {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: #fff;
+    border: 1px solid #e8e8e4;
+    color: #aaa;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.38rem 0.95rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.18s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.filter-btn:hover  { color: #444; border-color: #ccc; }
+.filter-btn.active { background: #111; color: #fff; border-color: #111; box-shadow: none; }
+
+
+/* ══════════════════════════════
+   NOTIFICATIONS LIST
+══════════════════════════════ */
+#notificationsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+
+/* ══════════════════════════════
+   NOTIFICATION CARD
+══════════════════════════════ */
+.notification {
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 14px;
+    padding: 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    animation: slideIn 0.35s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.notification:hover {
+    border-color: #d5d5d5;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+
+/* unread — left accent + subtle bg tint */
+.notification.unread {
+    border-left: 3px solid #111;
+    background: #fafaf8;
+}
+
+/* type-specific left border color */
+.notification.approved.unread { border-left-color: #4cc98a; }
+.notification.rejected.unread { border-left-color: #e87070; }
+
+/* unread dot */
+.notification.unread::after {
+    content: '';
+    position: absolute;
+    top: 1.1rem;
+    right: 1.1rem;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #111;
+}
+
+.notification.approved.unread::after { background: #2e9e66; }
+.notification.rejected.unread::after { background: #d94f4f; }
+
+
+/* ── NOTIFICATION HEADER ── */
+.notif-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+}
+
+.notif-icon {
+    font-size: 1.35rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+    line-height: 1;
+}
+
+.notif-content { flex: 1; }
+
+.notif-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+}
+
+.notif-message {
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 1.6;
+}
+
+
+/* ── NOTIFICATION FOOTER ── */
+.notif-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f2f2f0;
+}
+
+.notif-time {
+    font-size: 0.68rem;
+    color: #ccc;
+}
+
+
+/* ══════════════════════════════
+   BUTTONS
+══════════════════════════════ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 7px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: inherit;
+    transition: all 0.18s;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-secondary {
+    background: #fafaf8;
+    color: #555;
+    border-color: #e4e4e0;
+}
+
+.btn-secondary:hover {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.btn-primary:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+
+/* ══════════════════════════════
+   EMPTY STATE
+══════════════════════════════ */
+.empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.empty-icon { font-size: 2.8rem; }
+
+.empty h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.empty p {
+    font-size: 0.82rem;
+    color: #bbb;
+    margin-bottom: 0.5rem;
+}
+
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 580px) {
+    .page         { padding: 1.5rem 1.25rem 3rem; }
+    .notif-footer { flex-direction: column; align-items: flex-start; }
+}

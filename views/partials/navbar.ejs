@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+        <nav class="navbar">
+        <div class="logo">Kashmir Found & Lost</div>
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="/login_dashboard" onclick="showTab('all')">Dashboard</a>
+                <!-- <a href="#my-posts" onclick="showTab('my-posts')">My Posts</a> -->
+                 <a href="/my-posts">My Posts</a>
+
+                <a href="/contact-requests">Requests</a>
+                <!-- <a href="/notifications">Notifications</a> -->
+                 <a href="/notifications" style="position: relative;">
+  Notifications
+  <% if (unreadCount > 0) { %>
+    <span class="notif-badge"><%= unreadCount %></span>
+  <% } %>
+</a>
+
+
+
+
+                
+
+
+
+
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">👤</div>
+                <!-- <div class="user-name" id="userName">User Name</div> -->
+
+
+
+
+
+                <div class="user-name">
+  <%= user.first_name %> <%= user.last_name %>
+</div>
+
+
+            </div>
+        </div>
+    </nav>
+    
+</body>
+</html>

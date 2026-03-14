@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Requests - IUST Found & Lost</title>
+    <link rel="stylesheet" href="/css/contact_requests.css">
+</head>
+<body>
+    
+    <%- include("partials/navbar") %>
+
+    <div class="page">
+        <div class="header-section">
+            <h1>Contact Requests 📬</h1>
+            <p>Manage requests from people interested in your items</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-label">Total Requests</div>
+                <div class="stat-value" id="totalRequests">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value pending" id="pendingRequests">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Approved</div>
+                <div class="stat-value approved" id="approvedRequests">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Rejected</div>
+                <div class="stat-value rejected" id="rejectedRequests">0</div>
+            </div>
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterRequests('all')">All Requests</button>
+            <button class="filter-tab" onclick="filterRequests('pending')">Pending</button>
+            <button class="filter-tab" onclick="filterRequests('approved')">Approved</button>
+            <button class="filter-tab" onclick="filterRequests('rejected')">Rejected</button>
+        </div>
+
+        <div class="requests-grid" id="requestsGrid">
+            <% if (requests.length === 0) { %>
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <div class="empty-state-title">No contact requests yet</div>
+                    <div class="empty-state-text">When someone wants to contact you about your items, their requests will appear here.</div>
+                </div>
+            <% } %>
+
+            <% requests.forEach(req => { %>
+                <div class="request-card <%= req.status %>" data-status="<%= req.status %>">
+                    <div class="request-header">
+                        <div class="request-title">
+                            <span class="item-type-badge <%= req.item_type ? req.item_type.toLowerCase() : 'lost' %>">
+                                <%= req.item_type || 'LOST' %>
+                            </span>
+                            <div class="item-name"><%= req.item_name %></div>
+                        </div>
+                        <div class="status-badge <%= req.status %>">
+                            <%= req.status.toUpperCase() %>
+                        </div>
+                    </div>
+
+                    <div class="requester-info">
+                        <div class="requester-avatar">
+                            <%= req.first_name.charAt(0).toUpperCase() %>
+                        </div>
+                        <div class="requester-details">
+                            <div class="requester-name">
+                                <%= req.first_name %> <%= req.last_name %>
+                            </div>
+                            <div class="requester-meta">
+                                <% if (req.status === 'approved' && req.email) { %>
+                                    <div class="contact-info">
+                                        <span class="contact-badge">📧 <%= req.email %></span>
+                                        <% if (req.phone) { %>
+                                            <span class="contact-badge">📱 <%= req.phone %></span>
+                                        <% } %>
+                                    </div>
+                                <% } else { %>
+                                    <span>Requested contact information</span>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if (req.message) { %>
+                        <div class="message-section">
+                            <div class="message-label">Message</div>
+                            <div class="message-content">"<%= req.message %>"</div>
+                        </div>
+                    <% } %>
+
+                    <div class="request-footer">
+                        <div class="request-date">
+                            🕒 <%= new Date(req.created_at).toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }) %>
+                        </div>
+
+                        <div class="action-buttons">
+                            <% if (req.status === 'pending') { %>
+                                <button class="btn btn-approve" onclick="approveRequest(<%= req.id %>, this)">
+                                    <span>✓</span>
+                                    <span>Approve</span>
+                                </button>
+                                <button class="btn btn-reject" onclick="rejectRequest(<%= req.id %>, this)">
+                                    <span>✗</span>
+                                    <span>Reject</span>
+                                </button>
+                            <% } %>
+                            <button class="btn btn-view" onclick="window.location.href='/items/<%= req.item_id %>'">
+                                <span>👁️</span>
+                                <span>View Item</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Calculate and display stats
+        function updateStats() {
+            const cards = document.querySelectorAll('.request-card');
+            const total = cards.length;
+            let pending = 0, approved = 0, rejected = 0;
+
+            cards.forEach(card => {
+                const status = card.dataset.status;
+                if (status === 'pending') pending++;
+                else if (status === 'approved') approved++;
+                else if (status === 'rejected') rejected++;
+            });
+
+            document.getElementById('totalRequests').textContent = total;
+            document.getElementById('pendingRequests').textContent = pending;
+            document.getElementById('approvedRequests').textContent = approved;
+            document.getElementById('rejectedRequests').textContent = rejected;
+        }
+
+        // Filter requests
+        function filterRequests(status) {
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter cards
+            const cards = document.querySelectorAll('.request-card');
+            cards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                    // Trigger re-animation
+                    card.style.animation = 'none';
+                    setTimeout(() => {
+                        card.style.animation = 'fadeInUp 0.5s ease-out';
+                    }, 10);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Approve request
+        async function approveRequest(id, button) {
+            const card = button.closest('.request-card');
+            const buttons = card.querySelectorAll('.btn');
+            
+            // Disable buttons and show loading
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn === button) {
+                    btn.innerHTML = '<span class="loading"></span>';
+                }
+            });
+
+            try {
+                const response = await fetch(`/contact-requests/${id}/approve`, { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    showToast('Request approved! Contact information is now visible.', 'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error('Failed to approve request');
+                }
+            } catch (error) {
+                showToast('Failed to approve request. Please try again.', 'error');
+                buttons.forEach(btn => btn.disabled = false);
+                button.innerHTML = '<span>✓</span><span>Approve</span>';
+            }
+        }
+
+        // Reject request
+        async function rejectRequest(id, button) {
+            const card = button.closest('.request-card');
+            const buttons = card.querySelectorAll('.btn');
+            
+            // Disable buttons and show loading
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn === button) {
+                    btn.innerHTML = '<span class="loading"></span>';
+                }
+            });
+
+            try {
+                const response = await fetch(`/contact-requests/${id}/reject`, { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    showToast('Request rejected.', 'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error('Failed to reject request');
+                }
+            } catch (error) {
+                showToast('Failed to reject request. Please try again.', 'error');
+                buttons.forEach(btn => btn.disabled = false);
+                button.innerHTML = '<span>✗</span><span>Reject</span>';
+            }
+        }
+
+        // Initialize stats on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+        });
+    </script>
+</body>
+</html>

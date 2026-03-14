@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post an Item – IUST Found & Lost</title>
+    <link rel="stylesheet" href="/css/post_item.css">
+</head>
+<body>
+
+    <%- include("partials/navbar") %>
+
+    <div class="page">
+
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1>Post an Item</h1>
+            <p>Help reunite people with their belongings or report what you've found</p>
+        </div>
+
+        <!-- TYPE SELECTOR -->
+        <div class="type-selector">
+            <div class="type-card active" id="lostCard" onclick="selectType('lost')">
+                <div class="type-icon">📢</div>
+                <div class="type-title">I Lost Something</div>
+                <div class="type-desc">Report an item you've lost</div>
+            </div>
+            <div class="type-card" id="foundCard" onclick="selectType('found')">
+                <div class="type-icon">✨</div>
+                <div class="type-title">I Found Something</div>
+                <div class="type-desc">Report an item you've found</div>
+            </div>
+        </div>
+
+        <!-- FORM -->
+        <form class="post-form" method="POST" action="/items" enctype="multipart/form-data" id="postForm">
+
+            <input type="hidden" id="postType" name="type" value="Lost">
+
+            <!-- 01 ITEM DETAILS -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-num">01</span>
+                    <h3>Item Details</h3>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category <span class="req">*</span></label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="phone">📱 Mobile Phone</option>
+                        <option value="wallet">👜 Wallet / Purse</option>
+                        <option value="jewelry">💍 Jewelry</option>
+                        <option value="keys">🔑 Keys</option>
+                        <option value="documents">💳 Documents / Cards</option>
+                        <option value="electronics">📷 Electronics</option>
+                        <option value="bags">🎒 Bags / Luggage</option>
+                        <option value="clothing">👕 Clothing</option>
+                        <option value="pet">🐕 Pet</option>
+                        <option value="other">✨ Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Item Name <span class="req">*</span></label>
+                    <input type="text" id="title" name="item_name"
+                           placeholder="e.g., iPhone 13 Pro Max – Black" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">
+                        Description <span class="req">*</span>
+                        <span class="char-count" id="charCount">0 / 500</span>
+                    </label>
+                    <textarea id="description" name="description"
+                              placeholder="Describe color, brand, distinctive marks, condition…"
+                              required maxlength="500"
+                              oninput="updateCharCount()"></textarea>
+                </div>
+            </div>
+
+            <!-- 02 LOCATION & TIME -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-num">02</span>
+                    <h3>Location &amp; Time</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location <span class="req">*</span></label>
+                        <input type="text" id="location" name="location"
+                               placeholder="e.g., Lal Chowk, Srinagar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date <span class="req">*</span></label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="landmark">Nearby Landmark <span class="opt">(optional)</span></label>
+                    <input type="text" id="landmark" name="landmark"
+                           placeholder="e.g., Near City Mall">
+                </div>
+            </div>
+
+            <!-- 03 PHOTO -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-num">03</span>
+                    <h3>Photo</h3>
+                </div>
+
+                <div class="info-box">
+                    <span>💡</span>
+                    <span>Clear photos significantly increase your chances of a match.</span>
+                </div>
+
+                <!-- ✅ FIXED: upload-area is properly open and closed -->
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" name="image"
+                           accept="image/*" onchange="handleFileSelect(event)">
+                    <div class="upload-inner" id="uploadInner">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Click to upload or drag &amp; drop</div>
+                        <div class="upload-hint">JPG or PNG · Max 5 MB</div>
+                    </div>
+                </div>
+
+                <div class="image-preview" id="imagePreview"></div>
+            </div>
+
+            <!-- 04 CONTACT -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-num">04</span>
+                    <h3>Contact</h3>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactMethod">Preferred Contact Method <span class="req">*</span></label>
+                    <select id="contactMethod" name="contactMethod" required>
+                        <option value="message">In-app Message</option>
+                        <option value="phone">Phone</option>
+                        <option value="email">Email</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone <span class="opt">(optional)</span></label>
+                        <input type="tel" id="phone" name="phone"
+                               placeholder="+91 XXXXX XXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email <span class="opt">(optional)</span></label>
+                        <input type="email" id="email" name="email"
+                               placeholder="you@example.com">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="form-actions">
+                <button type="button" class="btn-cancel"
+                        onclick="window.history.back()">Cancel</button>
+                <button type="submit" class="btn-submit">Post Item →</button>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        /* TYPE SELECTOR */
+        function selectType(type) {
+            document.getElementById('postType').value = type === 'lost' ? 'Lost' : 'Found';
+            document.getElementById('lostCard').classList.toggle('active', type === 'lost');
+            document.getElementById('foundCard').classList.toggle('active', type === 'found');
+        }
+
+        /* CHAR COUNTER */
+        function updateCharCount() {
+            const len = document.getElementById('description').value.length;
+            const el  = document.getElementById('charCount');
+            el.textContent = `${len} / 500`;
+            el.classList.toggle('warn', len > 450);
+        }
+
+        /* FILE UPLOAD */
+        let selectedFile = null;
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File is too large. Maximum size is 5 MB.');
+                return;
+            }
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('uploadInner').innerHTML = `
+                    <img src="${e.target.result}" alt="Preview"
+                         style="max-height:160px;border-radius:8px;object-fit:contain;pointer-events:none;">
+                    <div class="upload-hint" style="margin-top:.5rem;">${file.name}</div>
+                `;
+                document.getElementById('imagePreview').innerHTML = `
+                    <button type="button" class="remove-img" onclick="removeImage()">✕ Remove image</button>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage() {
+            selectedFile = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('uploadInner').innerHTML = `
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">Click to upload or drag &amp; drop</div>
+                <div class="upload-hint">JPG or PNG · Max 5 MB</div>
+            `;
+            document.getElementById('imagePreview').innerHTML = '';
+        }
+
+        /* DRAG & DROP */
+        const area = document.getElementById('uploadArea');
+
+        area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+        area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+        area.addEventListener('drop', e => {
+            e.preventDefault();
+            area.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                const fi = document.getElementById('fileInput');
+                fi.files = dt.files;
+                handleFileSelect({ target: fi });
+            }
+        });
+
+        /* MAX DATE = TODAY */
+        document.getElementById('date').max = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+/* ══════════════════════════════
+   NAVBAR
+══════════════════════════════ */
+.navbar {
+    width: 100%;
+    height: 62px;
+    background: #fff;
+    border-bottom: 1px solid #ebebeb;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ── LOGO ── */
+.logo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: -0.2px;
+}
+
+
+/* ── RIGHT SIDE ── */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+
+/* ── NAV LINKS ── */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.nav-links a {
+    position: relative;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #aaa;
+    text-decoration: none;
+    padding: 0.45rem 0.85rem;
+    border-radius: 7px;
+    transition: all 0.18s;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.nav-links a:hover {
+    color: #111;
+    background: #f5f5f3;
+}
+
+.nav-links a.active {
+    color: #111;
+    background: #f0f0ee;
+    font-weight: 600;
+}
+
+
+/* ── NOTIFICATION BADGE ── */
+.notif-badge {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: #111;
+    color: #fff;
+    font-size: 0.52rem;
+    font-weight: 700;
+    min-width: 15px;
+    height: 15px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+
+/* ── DIVIDER ── */
+.nav-divider {
+    width: 1px;
+    height: 20px;
+    background: #ebebeb;
+    flex-shrink: 0;
+    margin: 0 0.5rem;
+}
+
+
+/* ── USER PROFILE ── */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: #f8f8f6;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    margin-left: 0.75rem;
+}
+
+.user-profile:hover {
+    border-color: #ccc;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ebebeb;
+    border: 1px solid #e0e0dc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.88rem;
+    flex-shrink: 0;
+}
+
+.user-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #444;
+    white-space: nowrap;
+}
+
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 640px) {
+    .navbar        { padding: 0 1.25rem; }
+    .nav-links a   { padding: 0.4rem 0.6rem; font-size: 0.78rem; }
+    .user-name     { display: none; }
+    .user-profile  { padding: 0.35rem 0.5rem; }
+}
+
+@media (max-width: 480px) {
+    /* hide less important links on very small screens */
+    .nav-links a[href="/contact-requests"] { display: none; }
+}

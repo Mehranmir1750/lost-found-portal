@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – IUST Found & Lost</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-dot"></span>
+      <span>KFL Admin</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="/admin" class="snav-item active">
+        <span class="snav-icon">◈</span> Dashboard
+      </a>
+      <a href="/admin/items" class="snav-item">
+        <span class="snav-icon">◫</span> Items
+      </a>
+      <a href="/admin/users" class="snav-item">
+        <span class="snav-icon">◉</span> Users
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="/" class="snav-item">
+        <span class="snav-icon">↗</span> View Site
+      </a>
+      <a href="/admin/logout" class="snav-item danger">
+        <span class="snav-icon">⏻</span> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+
+    <!-- TOP BAR -->
+    <header class="admin-topbar">
+      <div>
+        <h2 class="page-title">Dashboard</h2>
+        <p class="page-sub">Overview of your platform</p>
+      </div>
+      <div class="topbar-right">
+        <span class="admin-badge">Admin</span>
+      </div>
+    </header>
+
+    <!-- STAT CARDS -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-num"><%= stats.users %></div>
+        <div class="stat-icon">◉</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Items</div>
+        <div class="stat-num"><%= stats.items %></div>
+        <div class="stat-icon">◫</div>
+      </div>
+      <div class="stat-card accent-red">
+        <div class="stat-label">Lost Items</div>
+        <div class="stat-num"><%= stats.lost %></div>
+        <div class="stat-icon">📢</div>
+      </div>
+      <div class="stat-card accent-green">
+        <div class="stat-label">Found Items</div>
+        <div class="stat-num"><%= stats.found %></div>
+        <div class="stat-icon">✨</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Open Cases</div>
+        <div class="stat-num"><%= stats.open %></div>
+        <div class="stat-icon">◎</div>
+      </div>
+      <div class="stat-card accent-muted">
+        <div class="stat-label">Closed Cases</div>
+        <div class="stat-num"><%= stats.closed %></div>
+        <div class="stat-icon">✓</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Contact Requests</div>
+        <div class="stat-num"><%= stats.requests %></div>
+        <div class="stat-icon">◷</div>
+      </div>
+      <div class="stat-card accent-amber">
+        <div class="stat-label">Unread Notifications</div>
+        <div class="stat-num"><%= stats.unread %></div>
+        <div class="stat-icon">🔔</div>
+      </div>
+    </section>
+
+    <!-- TWO COLUMN: recent items + recent users -->
+    <section class="admin-cols">
+
+      <!-- RECENT ITEMS -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Recent Items</h3>
+          <a href="/admin/items" class="admin-link">View all →</a>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Type</th>
+              <th>Location</th>
+              <th>Posted by</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% recentItems.forEach(item => { %>
+            <tr>
+              <td class="td-bold"><%= item.item_name %></td>
+              <td>
+                <span class="pill <%= item.type.toLowerCase() %>"><%= item.type %></span>
+              </td>
+              <td class="td-muted"><%= item.location %></td>
+              <td class="td-muted"><%= item.first_name %> <%= item.last_name %></td>
+              <td class="td-muted"><%= new Date(item.created_at).toLocaleDateString() %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RECENT USERS -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Recent Users</h3>
+          <a href="/admin/users" class="admin-link">View all →</a>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% recentUsers.forEach(u => { %>
+            <tr>
+              <td class="td-bold"><%= u.first_name %> <%= u.last_name %></td>
+              <td class="td-muted"><%= u.email %></td>
+              <td class="td-muted"><%= u.phone || '—' %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>

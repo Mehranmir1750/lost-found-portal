@@ -200,3 +200,30 @@
     /* hide logout on very small screens if present */
     .logout-link { display: none; }
 }
+
+/* ── LOGO IMAGE ── */
+.navbar img {
+    height: 80px;
+    width: 80px;
+    object-fit: contain;
+    border-radius:500px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 540px) {
+    .navbar img {
+        height: 30px;
+        width: 30px;
+    }
+}
+
+
+.logo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: -0.2px;
+    margin-left: 0.4rem; /* ← add this */
+}

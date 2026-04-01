@@ -466,3 +466,30 @@ body {
 
     .login-container { padding: 2rem 1.5rem; }
 }
+
+/* ── NAVBAR LOGO IMAGE ── */
+.navbar > img {
+    height: 36px;
+    width: 36px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+/* ── LEFT PANEL LOGO IMAGE ── */
+.login-info > img {
+    height: 64px;
+    width: 64px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+@media (max-width: 680px) {
+    .navbar > img {
+        height: 30px;
+        width: 30px;
+    }
+}
+

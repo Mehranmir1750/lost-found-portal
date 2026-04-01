@@ -557,3 +557,46 @@ body {
     content: '🏛️';
     font-size: 0.8rem;
 }
+
+/* ── NAVBAR LOGO IMAGE ── */
+.navbar > img {
+    height: 80px;
+    width: 80px;
+    object-fit: contain;
+    border-radius: 50px;
+    flex-shrink: 0;
+}
+
+/* ── HERO LOGO IMAGE ── */
+.hero-content > img {
+    height: 250px;
+    width: 250px;
+    object-fit: contain;
+    border-radius: 500px;
+     background-color:whitesmoke;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+    .navbar > img {
+        height: 30px;
+        width: 30px;
+    }
+
+    .hero-content > img {
+        height: 64px;
+        width: 64px;
+    }
+}
+
+
+.logo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 0.4rem; /* ← add this */
+}

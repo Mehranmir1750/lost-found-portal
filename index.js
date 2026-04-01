@@ -5,6 +5,8 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import helmet from "helmet";
 import dotenv from "dotenv";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 
 dotenv.config();
@@ -17,6 +19,22 @@ const app = express();
 const saltRounds = 10;
 
 // app.use(helmet());
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "lost_found",
+    allowed_formats: ["jpg", "png", "jpeg", "webp"],
+  },
+});
+
+const upload = multer({ storage });
 
 
 app.use(helmet({
@@ -31,16 +49,16 @@ app.use("/uploads", express.static("public/uploads"));
 
 
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "public/uploads");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + "-" + file.originalname);
+//   }
+// });
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
 
 
@@ -53,7 +71,7 @@ app.use(
   })
 );
 
-
+app.use(express.static("public"));
 
 app.use(async (req, res, next) => {
   if (!req.session.user) {
@@ -440,39 +458,65 @@ app.get("/items/new", (req, res) => {
 
 
 // it only collects the data 
+// app.post("/items", upload.single("image"), async (req, res) => {
+//   if (!req.session.user) {
+//     return res.redirect("/login");
+//   }
+
+//   const { type, item_name, category, description, location, landmark } = req.body;
+//   const userId = req.session.user.id;
+
+// //   const imagePath = "/uploads/" + req.file.filename;
+
+//    const imagePath = req.file ? "/uploads/" + req.file.filename : null;
+
+//   try {
+//     await pool.query(
+//       `INSERT INTO items 
+//        (user_id, type, item_name, category, description, location,image, landmark) 
+//        VALUES ($1, $2, $3, $4, $5, $6,$7, $8)`,
+//       [userId, type, item_name, category, description, location,imagePath, landmark]
+
+
+      
+//     );
+
+//     console.log("Body:", req.body);
+
+//      res.redirect("/login_dashboard");
+//   } catch (err) {
+//     console.error("Item insert error:", err.message);
+//     res.status(500).send("Error posting item");
+//   }
+
+//     console.log("Body:", req.body);
+// });
+
+
+
+
 app.post("/items", upload.single("image"), async (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/login");
-  }
+  if (!req.session.user) return res.redirect("/login");
 
   const { type, item_name, category, description, location, landmark } = req.body;
   const userId = req.session.user.id;
-
-//   const imagePath = "/uploads/" + req.file.filename;
-
-   const imagePath = req.file ? "/uploads/" + req.file.filename : null;
+  const imagePath = req.file ? req.file.path : null; // Cloudinary URL
 
   try {
     await pool.query(
       `INSERT INTO items 
-       (user_id, type, item_name, category, description, location,image, landmark) 
-       VALUES ($1, $2, $3, $4, $5, $6,$7, $8)`,
-      [userId, type, item_name, category, description, location,imagePath, landmark]
-
-
-      
+       (user_id, type, item_name, category, description, location, image, landmark) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [userId, type, item_name, category, description, location, imagePath, landmark]
     );
 
-    console.log("Body:", req.body);
-
-     res.redirect("/login_dashboard");
+    res.redirect("/login_dashboard");
   } catch (err) {
-    console.error("Item insert error:", err.message);
+    console.error("Item insert error:", err);
     res.status(500).send("Error posting item");
   }
-
-    console.log("Body:", req.body);
 });
+
 
 
 

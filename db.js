@@ -18,3 +18,29 @@ pool.on("connect", () => {
 });
 
 export default pool;
+
+// import pg from "pg";
+
+// const { Pool } = pg;
+
+// const pool = new Pool({
+
+//   user: "postgres",
+
+//   host: "localhost",
+
+//   database: "LostFound",
+
+//   password: "",
+
+//   port: 5432
+
+// });
+
+// pool.on("connect", () => {
+
+//   console.log("Local PostgreSQL connected");
+
+// });
+
+// export default pool;

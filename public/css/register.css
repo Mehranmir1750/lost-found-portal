@@ -511,3 +511,46 @@ body {
     z-index: 10;
     font-size: 18px;
 }
+
+.google-auth img{
+    height: 30px;
+    width: 30px;
+    padding: 2px;
+}
+
+.google-auth{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 3px;
+    
+}
+
+.google-btn{
+    display: flex;
+    border-radius: 15px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+
+.google-btn:hover{
+    background-color:beige;
+    cursor: pointer;
+    transform: scale(1.1);
+    color: black;
+    padding: 5px;
+}
+
+.or{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    padding: 10px;
+    color: #555;
+}

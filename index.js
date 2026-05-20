@@ -38,14 +38,20 @@ const upload = multer({ storage });
 
 
 app.use(helmet({
-    contentSecurityPolicy: false
+    contentSecurityPolicy: false,
+    crossOriginOpenerPolicy: { policy: "unsafe-none" } 
 }));
 
 // middleware
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+
 app.use("/uploads", express.static("public/uploads"));
+
+
 
 
 
@@ -1102,17 +1108,85 @@ app.get("/admin/logout", (req, res) => {
 
 
 
+app.post("/google-login", async (req, res) => {
 
+  const {
+    google_id,
+    name,
+    email,
+  } = req.body;
 
+  try {
 
+    let result = await pool.query(
+      "SELECT * FROM google_users WHERE email = $1",
+      [email]
+    );
 
+    let user;
 
+    // New Google user
+    if (result.rows.length === 0) {
 
-// SERVER
-// app.listen(3000, () => {
-//   console.log("Server running on port 3000");
-// });
+      const names = name.split(" ");
 
+      const first_name = names[0];
+
+      const last_name = names.slice(1).join(" ");
+
+      const newUser = await pool.query(
+        `
+        INSERT INTO google_users
+        (google_id, first_name, last_name, email)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *
+        `,
+        [
+          google_id,
+          first_name,
+          last_name,
+          email
+        ]
+      );
+
+      user = newUser.rows[0];
+
+    } else {
+
+      user = result.rows[0];
+
+    }
+
+    // Session
+    req.session.user = {
+
+      id: user.id,
+
+      first_name: user.first_name,
+
+      last_name: user.last_name,
+
+      email: user.email,
+
+      googleUser: true
+
+    };
+
+    res.json({
+      success: true
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      success: false
+    });
+
+  }
+
+});
 
 const PORT = process.env.PORT || 3000;
 

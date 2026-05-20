@@ -1,6 +1,7 @@
 
 .env
 node_modules
+serviceAccount.json
 
 # Logs
 logs
